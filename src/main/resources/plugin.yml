@@ -1,0 +1,8 @@
+name: McKoth
+version: ${project.version}
+main: com.virtualparticle.mc.mckoth.McKoth
+api-version: 1.16
+depend: [WorldEdit]
+authors: [VirtualParticle]
+description: Minecraft King of the Hill
+website: https://github.com/VirtualParticle
