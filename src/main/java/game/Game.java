@@ -5,6 +5,8 @@ import arena.Map;
 import com.virtualparticle.mc.mckoth.McKoth;
 import game.listeners.CapturePointListener;
 import game.listeners.GamePlayerListener;
+import game.timer.CaptureTimer;
+import org.bukkit.event.Listener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,18 +19,22 @@ public class Game {
     private final List<ActiveCapturePoint> activeCapturePoints;
     private final McKoth plugin;
     private final int targetScore;
+    private final List<Listener> listeners;
 
     public Game(Map map, int id, int targetScore) {
         this.map = map;
         this.id = id;
         this.targetScore = targetScore;
-        this.teams = new ArrayList<>();
-        this.plugin = McKoth.getPlugin();
+
+        teams = new ArrayList<>();
+        plugin = McKoth.getPlugin();
         plugin.getGames().add(this);
         activeCapturePoints = new ArrayList<>();
 
-        plugin.getServer().getPluginManager().registerEvents(new CapturePointListener(this), plugin);
-        plugin.getServer().getPluginManager().registerEvents(new GamePlayerListener(this), plugin);
+        listeners = new ArrayList<>();
+        listeners.add(new CapturePointListener(this));
+        listeners.add(new GamePlayerListener(this));
+        listeners.forEach(listener -> plugin.getServer().getPluginManager().registerEvents(listener, plugin));
 
     }
 
@@ -57,9 +63,7 @@ public class Game {
     }
 
     public void endRound(Team winningTeam) {
-        for (Team team : teams) {
-            team.getTimer().reset();
-        }
+        teams.forEach(team -> team.getTimer().reset());
         if (winningTeam.incrementPoints() >= targetScore) {
             endGame(winningTeam);
         }
