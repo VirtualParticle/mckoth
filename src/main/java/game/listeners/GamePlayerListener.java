@@ -23,6 +23,10 @@ public class GamePlayerListener implements Listener {
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent e) {
 
+        if (!game.isActive()) {
+            return;
+        }
+
         Player p = e.getPlayer();
         Location locationFrom = e.getFrom();
         Location locationTo = e.getTo();

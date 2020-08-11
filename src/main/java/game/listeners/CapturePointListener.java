@@ -18,6 +18,10 @@ public class CapturePointListener implements Listener {
     @EventHandler
     public void onPointCapture(PointCaptureEvent e) {
 
+        if (!game.isActive()) {
+            return;
+        }
+
         Team currentTeam = e.getCurrentTeam();
         Team capturingTeam = e.getCapturingTeam();
         ActiveCapturePoint capturePoint = e.getCapturePoint();

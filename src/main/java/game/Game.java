@@ -19,6 +19,7 @@ public class Game {
     private final List<ActiveCapturePoint> activeCapturePoints;
     private final McKoth plugin;
     private final int targetScore;
+    private boolean active = false;
 
     public Game(Map map, int id, int targetScore) {
         this.map = map;
@@ -53,6 +54,7 @@ public class Game {
 
     public void start() {
 
+        active = true; // TODO: this may be moved to follow warmup, maybe not
         int task = plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
 
         }, 0, 20);
@@ -67,7 +69,11 @@ public class Game {
     }
 
     private void endGame(Team winningTeam) {
+        active = false; // TODO: this might end up being moved to endRound()
+    }
 
+    public boolean isActive() {
+        return active;
     }
 
 }
