@@ -16,7 +16,6 @@ public class ActiveCapturePoint {
     private final BukkitScheduler scheduler;
 
     private final CapturePoint capturePoint;
-    private long capTime;
     private final String name;
     private final CaptureTimer timer;
 
@@ -25,7 +24,6 @@ public class ActiveCapturePoint {
 
     public ActiveCapturePoint(CapturePoint capturePoint, long capTime, String name) {
         this.capturePoint = capturePoint;
-        this.capTime = capTime;
         this.name = name;
         this.plugin = McKoth.getPlugin();
         this.scheduler = plugin.getServer().getScheduler();
@@ -43,15 +41,13 @@ public class ActiveCapturePoint {
         return capturePoint;
     }
 
-    public long getCapTime() {
-        return capTime;
-    }
-
     public String getName() {
         return name;
     }
 
-    public void resetTimer() {
+    public void reset() {
+        capturingPlayers.clear();
+        opposingPlayers.clear();
         timer.reset();
     }
 
