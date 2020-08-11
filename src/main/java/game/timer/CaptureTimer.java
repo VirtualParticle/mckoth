@@ -24,6 +24,14 @@ public class CaptureTimer extends Timer {
     }
 
     @Override
+    public void reset() {
+        super.reset();
+        controllingTeam = null;
+        teamWithCaptime = null;
+        capturingTeam = null;
+    }
+
+    @Override
     public void run() {
         super.run();
 
