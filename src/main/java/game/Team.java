@@ -1,5 +1,6 @@
 package game;
 
+import com.sk89q.worldedit.regions.Region;
 import game.timer.Timer;
 import org.bukkit.Material;
 
@@ -12,17 +13,19 @@ public class Team {
     private final List<GamePlayer> players;
     private final Timer timer;
     private final Material identifier;
+    private final Region spawnRegion;
     private int points = 0;
 
-    public Team(String name, long captime, Material identifier) {
+    public Team(String name, long captime, Material identifier, Region spawnRegion) {
         this.name = name;
         this.timer = new Timer(captime);
+        this.spawnRegion = spawnRegion;
         players = new ArrayList<>();
         this.identifier = identifier;
     }
 
-    public Team(String name, long captime) {
-        this(name, captime, Material.AIR);
+    public Team(String name, long captime, Region spawnRegion) {
+        this(name, captime, Material.AIR, spawnRegion);
     }
 
     public List<GamePlayer> getPlayers() {
@@ -44,6 +47,10 @@ public class Team {
 
     public Material getIdentifier() {
         return identifier;
+    }
+
+    public Region getSpawnRegion() {
+        return spawnRegion;
     }
 
 }

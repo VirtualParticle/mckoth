@@ -2,12 +2,11 @@ package game;
 
 import arena.capturePoint.ActiveCapturePoint;
 import arena.Map;
+import com.sk89q.worldedit.regions.Region;
 import com.virtualparticle.mc.mckoth.McKoth;
 import game.listeners.CapturePointListener;
 import game.listeners.GamePlayerListener;
-import game.timer.CaptureTimer;
 import org.bukkit.Material;
-import org.bukkit.event.Listener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +23,7 @@ public class Game {
     private final int targetScore;
     private boolean active = false;
 
-    public Game(Map map, int id, int targetScore) {
+    public Game(Map map, int id, int targetScore, List<Region> spawnRegions) {
         this.map = map;
         this.id = id;
         this.targetScore = targetScore;
@@ -38,8 +37,8 @@ public class Game {
         plugin.getServer().getPluginManager().registerEvents(new GamePlayerListener(this), plugin);
 
         // TODO: this can be changed to allow more than two teams
-        teams.add(new Team("BLU", CAPTIME, Material.BLUE_WOOL));
-        teams.add(new Team("RED", CAPTIME, Material.RED_WOOL));
+        teams.add(new Team("BLU", CAPTIME, Material.BLUE_WOOL, spawnRegions.get(0)));
+        teams.add(new Team("RED", CAPTIME, Material.RED_WOOL, spawnRegions.get(1)));
 
     }
 
