@@ -24,8 +24,9 @@ public class Game {
         this.map = map;
         this.id = id;
         this.targetScore = targetScore;
-        this.teams = new ArrayList<>();
-        this.plugin = McKoth.getPlugin();
+
+        teams = new ArrayList<>();
+        plugin = McKoth.getPlugin();
         plugin.getGames().add(this);
         activeCapturePoints = new ArrayList<>();
 
