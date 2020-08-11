@@ -1,20 +1,26 @@
 package game.timer;
 
+import arena.capturePoint.ActiveCapturePoint;
+import arena.events.PointCaptureEvent;
+import com.virtualparticle.mc.mckoth.McKoth;
 import game.Team;
 import utils.Utils;
 
 public class CaptureTimer extends Timer {
 
+    private final ActiveCapturePoint capturePoint;
     private Team controllingTeam; // team which currently controls the point to which this timer is bound
     private Team teamWithCaptime; // team that currently has capture time (not the team currently on the point)
     private Team capturingTeam; // team on point
 
-    public CaptureTimer(long time) {
+    public CaptureTimer(long time, ActiveCapturePoint capturePoint) {
         super(time);
+        this.capturePoint = capturePoint;
     }
 
-    public CaptureTimer(long time, long interval) {
+    public CaptureTimer(long time, long interval, ActiveCapturePoint capturePoint) {
         super(time, interval);
+        this.capturePoint = capturePoint;
     }
 
     @Override
@@ -25,7 +31,14 @@ public class CaptureTimer extends Timer {
 
             if (capturingTeam == teamWithCaptime) {
                 // point captured
+                McKoth.getPlugin().getServer().getPluginManager().callEvent(
+                        new PointCaptureEvent(controllingTeam, capturingTeam, capturePoint)
+                );
+                if (controllingTeam != null) {
+                    controllingTeam.getTimer().setPaused(true);
+                }
                 controllingTeam = capturingTeam;
+                controllingTeam.getTimer().setPaused(false);
                 teamWithCaptime = null;
                 capturingTeam = null;
                 interval = 0;

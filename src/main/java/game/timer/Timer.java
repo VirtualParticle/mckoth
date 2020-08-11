@@ -29,6 +29,7 @@ public class Timer implements Runnable {
 
     public void reset() {
         time = originalTime;
+        setPaused(true);
     }
 
     @Override
@@ -38,6 +39,10 @@ public class Timer implements Runnable {
             time -= interval;
         }
 
+    }
+
+    public long getTime() {
+        return time;
     }
 
 }

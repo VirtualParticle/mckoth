@@ -1,5 +1,7 @@
 package game;
 
+import game.timer.Timer;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,14 +9,30 @@ public class Team {
 
     private final String name;
     private final List<GamePlayer> players;
+    private final Timer timer;
+    private int points = 0;
 
-    public Team(String name) {
+    public Team(String name, long captime) {
         this.name = name;
+        this.timer = new Timer(captime);
         players = new ArrayList<>();
     }
 
     public List<GamePlayer> getPlayers() {
         return players;
     }
+
+    public Timer getTimer() {
+        return timer;
+    }
+
+    public int incrementPoints() {
+        return incrementPoints(1);
+    }
+
+    public int incrementPoints(int val) {
+        return points += val;
+    }
+
 
 }

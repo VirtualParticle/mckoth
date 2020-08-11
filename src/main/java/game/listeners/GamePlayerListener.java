@@ -1,6 +1,6 @@
 package game.listeners;
 
-import arena.CapturePoint;
+import arena.capturePoint.ActiveCapturePoint;
 import arena.Map;
 import com.virtualparticle.mc.mckoth.McKoth;
 import game.Game;
@@ -16,7 +16,7 @@ import utils.Utils;
 public class GamePlayerListener implements Listener {
 
     @EventHandler
-    public boolean onPlayerMove(PlayerMoveEvent e) {
+    public void onPlayerMove(PlayerMoveEvent e) {
 
         Player p = e.getPlayer();
         Location locationFrom = e.getFrom();
@@ -28,7 +28,7 @@ public class GamePlayerListener implements Listener {
         for (Game game : McKoth.getPlugin().getGames()) {
             Map map = game.getMap();
             if (Utils.insideRegion(locationTo, map.getRegion())) {
-                for (CapturePoint.ActiveCapturePoint point : game.getActiveCapturePoints()) {
+                for (ActiveCapturePoint point : game.getActiveCapturePoints()) {
 
                     if (Utils.insideRegion(locationTo, point.getCapturePoint().getRegion())
                             || Utils.insideRegion(locationFrom, point.getCapturePoint().getRegion())) {
@@ -48,8 +48,6 @@ public class GamePlayerListener implements Listener {
                 }
             }
         }
-
-        return true;
 
     }
 
