@@ -6,12 +6,15 @@ import com.virtualparticle.mc.mckoth.McKoth;
 import game.listeners.CapturePointListener;
 import game.listeners.GamePlayerListener;
 import game.timer.CaptureTimer;
+import org.bukkit.Material;
 import org.bukkit.event.Listener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
+
+    public static final long CAPTIME = 60 * 3; // three minutes
 
     private final Map map;
     private final int id;
@@ -34,6 +37,10 @@ public class Game {
         plugin.getServer().getPluginManager().registerEvents(new CapturePointListener(this), plugin);
         plugin.getServer().getPluginManager().registerEvents(new GamePlayerListener(this), plugin);
 
+        // TODO: this can be changed to allow more than two teams
+        teams.add(new Team("BLU", CAPTIME, Material.BLUE_WOOL));
+        teams.add(new Team("RED", CAPTIME, Material.RED_WOOL));
+
     }
 
     public Map getMap() {
@@ -54,7 +61,7 @@ public class Game {
 
     public void start() {
 
-        active = true; // TODO: this may be moved to follow warmup, maybe not
+        active = true; // TODO: maybe move to follow warmup, maybe not
         int task = plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
 
         }, 0, 20);
