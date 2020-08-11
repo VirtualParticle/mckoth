@@ -5,8 +5,9 @@ import arena.events.PointCaptureEvent;
 import game.Game;
 import game.Team;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 
-public class CapturePointListener {
+public class CapturePointListener implements Listener {
 
     private final Game game;
 

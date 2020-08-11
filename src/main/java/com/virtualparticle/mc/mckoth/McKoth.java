@@ -17,7 +17,6 @@ public final class McKoth extends JavaPlugin {
     public void onEnable() {
         // Plugin startup logic
         plugin = this;
-        getServer().getPluginManager().registerEvents(new GamePlayerListener(), this);
         games = new ArrayList<>();
     }
 

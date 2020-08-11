@@ -3,6 +3,8 @@ package game;
 import arena.capturePoint.ActiveCapturePoint;
 import arena.Map;
 import com.virtualparticle.mc.mckoth.McKoth;
+import game.listeners.CapturePointListener;
+import game.listeners.GamePlayerListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +26,10 @@ public class Game {
         this.plugin = McKoth.getPlugin();
         plugin.getGames().add(this);
         activeCapturePoints = new ArrayList<>();
+
+        plugin.getServer().getPluginManager().registerEvents(new CapturePointListener(this), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new GamePlayerListener(this), plugin);
+
     }
 
     public Map getMap() {
