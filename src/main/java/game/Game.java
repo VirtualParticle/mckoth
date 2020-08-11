@@ -19,22 +19,18 @@ public class Game {
     private final List<ActiveCapturePoint> activeCapturePoints;
     private final McKoth plugin;
     private final int targetScore;
-    private final List<Listener> listeners;
 
     public Game(Map map, int id, int targetScore) {
         this.map = map;
         this.id = id;
         this.targetScore = targetScore;
-
-        teams = new ArrayList<>();
-        plugin = McKoth.getPlugin();
+        this.teams = new ArrayList<>();
+        this.plugin = McKoth.getPlugin();
         plugin.getGames().add(this);
         activeCapturePoints = new ArrayList<>();
 
-        listeners = new ArrayList<>();
-        listeners.add(new CapturePointListener(this));
-        listeners.add(new GamePlayerListener(this));
-        listeners.forEach(listener -> plugin.getServer().getPluginManager().registerEvents(listener, plugin));
+        plugin.getServer().getPluginManager().registerEvents(new CapturePointListener(this), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new GamePlayerListener(this), plugin);
 
     }
 
