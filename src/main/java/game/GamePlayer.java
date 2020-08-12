@@ -1,16 +1,19 @@
 package game;
 
+import com.virtualparticle.mc.mckoth.McKoth;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitScheduler;
 
 public class GamePlayer {
 
     public static final GameMode DEFAULT_GAMEMODE = GameMode.ADVENTURE;
 
+    private final McKoth plugin;
     private Team team;
     private final Player player;
     private boolean spectating = false;
@@ -22,6 +25,7 @@ public class GamePlayer {
 
     public GamePlayer(Player player, Team team) {
         this.player = player;
+        plugin = McKoth.getPlugin();
     }
 
     public Team getTeam() {
@@ -96,6 +100,33 @@ public class GamePlayer {
 
     public boolean isSpectating() {
         return spectating;
+    }
+
+    public void die() {
+
+        regenHealth();
+        spectate(player.getLocation());
+
+        BukkitScheduler scheduler = plugin.getServer().getScheduler();
+        float killCamLength = 3;
+        scheduler.scheduleSyncDelayedTask(plugin, () -> {
+
+            Player target = team.getPlayers().get((int) (team.getPlayers().size() * Math.random())).getPlayer();
+            spectate(target);
+            scheduler.scheduleSyncDelayedTask(plugin, () -> {
+                stopSpectating();
+                respawn();
+            }, (int) (20 * team.getRespawnTime()));
+
+        }, (int) (20 * killCamLength));
+
+    }
+
+    private void respawn() {
+
+        stopSpectating();
+        player.teleport(team.createRespawnLocation());
+
     }
 
 }
