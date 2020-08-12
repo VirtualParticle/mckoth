@@ -1,6 +1,7 @@
 package game;
 
 import com.sk89q.worldedit.regions.Region;
+import com.virtualparticle.mc.mckoth.McKoth;
 import game.timer.Timer;
 import org.bukkit.Material;
 
@@ -9,6 +10,7 @@ import java.util.List;
 
 public class Team {
 
+    private final McKoth plugin;
     private final String name;
     private final List<GamePlayer> players;
     private final Timer timer;
@@ -20,8 +22,9 @@ public class Team {
         this.name = name;
         this.timer = new Timer(captime);
         this.spawnRegion = spawnRegion;
-        players = new ArrayList<>();
         this.identifier = identifier;
+        players = new ArrayList<>();
+        plugin = McKoth.getPlugin();
     }
 
     public Team(String name, long captime, Region spawnRegion) {
@@ -30,6 +33,10 @@ public class Team {
 
     public List<GamePlayer> getPlayers() {
         return players;
+    }
+
+    public void startTimer() {
+        plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, timer, 0, 20);
     }
 
     public Timer getTimer() {

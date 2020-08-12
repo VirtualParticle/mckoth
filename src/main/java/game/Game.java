@@ -61,9 +61,7 @@ public class Game {
     public void start() {
 
         active = true; // TODO: maybe move to follow warmup, maybe not
-        int task = plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
-
-        }, 0, 20);
+        teams.forEach(Team::startTimer);
 
     }
 
