@@ -4,13 +4,17 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 public class GamePlayer {
 
+    public static final GameMode DEFAULT_GAMEMODE = GameMode.ADVENTURE;
+
     private Team team;
     private final Player player;
     private boolean spectating = false;
+    private boolean spectatingLocation = false;
 
     public GamePlayer(Player player) {
         this(player, null);
@@ -44,10 +48,12 @@ public class GamePlayer {
 
     public void spectate(Location location) {
 
-        if (!spectating) {
+        if (player.getGameMode() != GameMode.SPECTATOR) {
             player.setGameMode(GameMode.SPECTATOR);
-            spectating = true;
         }
+
+        spectatingLocation = true;
+        spectating = true;
 
         double distance = 5; // how far the camera should be
         float pitch = 30; // 90 is down, -90 is up, 0 is horizon
@@ -63,6 +69,32 @@ public class GamePlayer {
 
         player.teleport(camLocation);
 
+    }
+
+    public void spectate(Entity entity) {
+
+        if (spectatingLocation) {
+            spectatingLocation = false;
+        }
+
+        spectating = true;
+
+        if (player.getGameMode() != GameMode.SPECTATOR) {
+            player.setGameMode(GameMode.SPECTATOR);
+        }
+
+        player.setSpectatorTarget(entity);
+
+    }
+
+    public void stopSpectating() {
+        spectatingLocation = false;
+        spectating = false;
+        player.setGameMode(DEFAULT_GAMEMODE);
+    }
+
+    public boolean isSpectatingLocation() {
+        return spectatingLocation;
     }
 
     public boolean isSpectating() {

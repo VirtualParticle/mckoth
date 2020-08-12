@@ -35,6 +35,15 @@ public class GamePlayerListener implements Listener {
             return;
         }
 
+        if (gamePlayer.isSpectating()) {
+
+            if (gamePlayer.isSpectatingLocation()) {
+                event.setCancelled(true);
+            }
+
+            return;
+        }
+
         Location locationFrom = event.getFrom();
         Location locationTo = event.getTo();
 
@@ -80,6 +89,23 @@ public class GamePlayerListener implements Listener {
         event.setDamage(0);
         gamePlayer.regenHealth();
         gamePlayer.spectate(p.getLocation());
+
+    }
+
+    @EventHandler
+    public void onPlayerTeleport(PlayerTeleportEvent event) {
+
+        if (event.getCause() == PlayerTeleportEvent.TeleportCause.SPECTATE) {
+
+            Player p = event.getPlayer();
+            GamePlayer gamePlayer = game.getGamePlayer(p);
+            if (gamePlayer == null) {
+                return;
+            }
+
+            event.setCancelled(true);
+
+        }
 
     }
 
