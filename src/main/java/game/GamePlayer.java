@@ -129,6 +129,7 @@ public class GamePlayer {
     public void respawn() {
 
         stopSpectating();
+        regenHealth();
         player.teleport(team.createRespawnLocation());
 
     }
