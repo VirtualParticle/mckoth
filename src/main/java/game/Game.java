@@ -7,6 +7,7 @@ import com.virtualparticle.mc.mckoth.McKoth;
 import game.listeners.CapturePointListener;
 import game.listeners.GamePlayerListener;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,6 +80,18 @@ public class Game {
 
     public boolean isActive() {
         return active;
+    }
+
+    public GamePlayer getGamePlayer(Player p) {
+        GamePlayer gamePlayer = null;
+        for (Team team : teams) {
+            for (GamePlayer player : team.getPlayers()) {
+                if (player.getPlayer() == p) {
+                    gamePlayer = player;
+                }
+            }
+        }
+        return gamePlayer;
     }
 
 }

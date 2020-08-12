@@ -9,6 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import utils.Utils;
 
@@ -28,6 +29,8 @@ public class GamePlayerListener implements Listener {
         }
 
         Player p = e.getPlayer();
+        GamePlayer gamePlayer = game.getGamePlayer(p);
+
         Location locationFrom = e.getFrom();
         Location locationTo = e.getTo();
 
@@ -40,21 +43,27 @@ public class GamePlayerListener implements Listener {
 
                 if (Utils.insideRegion(locationTo, point.getCapturePoint().getRegion())
                         || Utils.insideRegion(locationFrom, point.getCapturePoint().getRegion())) {
-                    for (Team team : game.getTeams()) {
-                        for (GamePlayer player : team.getPlayers()) {
-                            if (player.getPlayer() == p) {
-                                if (Utils.insideRegion(locationTo, point.getCapturePoint().getRegion())) {
-                                    point.addPlayer(player);
-                                } else {
-                                    point.removePlayer(player);
-                                }
-                            }
-                        }
+                    if (Utils.insideRegion(locationTo, point.getCapturePoint().getRegion())) {
+                        point.addPlayer(gamePlayer);
+                    } else {
+                        point.removePlayer(gamePlayer);
                     }
                 }
 
             }
         }
+
+    }
+
+    @EventHandler
+    public void onPlayerDie(PlayerDeathEvent e) {
+
+        if (!game.isActive()) {
+            return;
+        }
+
+        Player p = e.getEntity();
+        GamePlayer gamePlayer = game.getGamePlayer(p);
 
     }
 
