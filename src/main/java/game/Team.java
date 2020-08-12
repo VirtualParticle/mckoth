@@ -16,6 +16,7 @@ public class Team {
     private final Timer timer;
     private final Material identifier;
     private final Region spawnRegion;
+    private int timerTask;
     private int points = 0;
 
     public Team(String name, long captime, Material identifier, Region spawnRegion) {
@@ -35,8 +36,12 @@ public class Team {
         return players;
     }
 
-    public void startTimer() {
-        plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, timer, 0, 20);
+    public void enableTimer() {
+        timerTask = plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin, timer, 0, 20);
+    }
+
+    public void disableTimer() {
+        plugin.getServer().getScheduler().cancelTask(timerTask);
     }
 
     public Timer getTimer() {

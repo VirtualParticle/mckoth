@@ -61,7 +61,7 @@ public class Game {
     public void start() {
 
         active = true; // TODO: maybe move to follow warmup, maybe not
-        teams.forEach(Team::startTimer);
+        teams.forEach(Team::enableTimer);
 
     }
 
@@ -74,6 +74,7 @@ public class Game {
 
     private void endGame(Team winningTeam) {
         active = false; // TODO: this might end up being moved to endRound()
+        teams.forEach(Team::disableTimer);
     }
 
     public boolean isActive() {
