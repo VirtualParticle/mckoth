@@ -99,7 +99,7 @@ public class GamePlayerListener implements Listener {
 
             Player p = event.getPlayer();
             GamePlayer gamePlayer = game.getGamePlayer(p);
-            if (gamePlayer == null) {
+            if (gamePlayer == null || !gamePlayer.isSpectating()) {
                 return;
             }
 
