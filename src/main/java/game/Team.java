@@ -1,12 +1,16 @@
 package game;
 
+import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.regions.Region;
 import com.virtualparticle.mc.mckoth.McKoth;
 import game.timer.Timer;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Team {
 
@@ -63,6 +67,17 @@ public class Team {
 
     public Region getSpawnRegion() {
         return spawnRegion;
+    }
+
+    public Location createRespawnLocation() {
+
+        World world = BukkitAdapter.adapt(Objects.requireNonNull(spawnRegion.getWorld()));
+        double x = spawnRegion.getMinimumPoint().getX() + spawnRegion.getWidth() * Math.random();
+        double y = spawnRegion.getMinimumPoint().getY();
+        double z = spawnRegion.getMinimumPoint().getZ() + spawnRegion.getLength() * Math.random();
+
+        return new Location(world, x, y, z);
+
     }
 
 }
