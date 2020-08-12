@@ -33,6 +33,10 @@ public class GamePlayer {
         return team;
     }
 
+    public void setTeam(Team team) {
+        this.team = team;
+    }
+
     public Player getPlayer() {
         return player;
     }
