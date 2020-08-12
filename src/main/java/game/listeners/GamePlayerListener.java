@@ -11,6 +11,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import utils.Utils;
 
 public class GamePlayerListener implements Listener {
@@ -22,20 +23,20 @@ public class GamePlayerListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerMove(PlayerMoveEvent e) {
+    public void onPlayerMove(PlayerMoveEvent event) {
 
         if (!game.isActive()) {
             return;
         }
 
-        Player p = e.getPlayer();
+        Player p = event.getPlayer();
         GamePlayer gamePlayer = game.getGamePlayer(p);
         if (gamePlayer == null) {
             return;
         }
 
-        Location locationFrom = e.getFrom();
-        Location locationTo = e.getTo();
+        Location locationFrom = event.getFrom();
+        Location locationTo = event.getTo();
 
         /* TODO: this might cause lag, so consider doing this on a regular interval instead of on event.
             It is also possible to implement a cool-down on this so it only runs it every-so-often */
@@ -59,9 +60,9 @@ public class GamePlayerListener implements Listener {
     }
 
     @EventHandler
-    public void onEntityDamage(EntityDamageEvent e) {
+    public void onEntityDamage(EntityDamageEvent event) {
 
-        if (e.getEntityType() != EntityType.PLAYER) {
+        if (event.getEntityType() != EntityType.PLAYER) {
             return;
         }
 
@@ -69,14 +70,14 @@ public class GamePlayerListener implements Listener {
             return;
         }
 
-        Player p = (Player) e.getEntity();
+        Player p = (Player) event.getEntity();
         GamePlayer gamePlayer = game.getGamePlayer(p);
         if (gamePlayer == null) {
             return;
         }
 
         // TODO: may have to cancel event, but setting damage to zero hopefully keeps the sound effect
-        e.setDamage(0);
+        event.setDamage(0);
         gamePlayer.regenHealth();
         gamePlayer.spectate(p.getLocation());
 
