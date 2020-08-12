@@ -1,5 +1,7 @@
 package game;
 
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Player;
 
 public class GamePlayer {
@@ -22,5 +24,15 @@ public class GamePlayer {
     public Player getPlayer() {
         return player;
     }
+
+    public void regenHealth() {
+        AttributeInstance maxHealthAttribute = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
+        int maxHealth = 20;
+        if (maxHealthAttribute != null) {
+            maxHealth = (int) maxHealthAttribute.getValue();
+        }
+        player.setHealth(maxHealth);
+    }
+
 
 }
