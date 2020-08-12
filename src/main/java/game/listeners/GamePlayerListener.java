@@ -6,9 +6,13 @@ import game.Game;
 import game.GamePlayer;
 import game.Team;
 import org.bukkit.Location;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import utils.Utils;
@@ -30,6 +34,9 @@ public class GamePlayerListener implements Listener {
 
         Player p = e.getPlayer();
         GamePlayer gamePlayer = game.getGamePlayer(p);
+        if (gamePlayer == null) {
+            return;
+        }
 
         Location locationFrom = e.getFrom();
         Location locationTo = e.getTo();
@@ -56,14 +63,25 @@ public class GamePlayerListener implements Listener {
     }
 
     @EventHandler
-    public void onPlayerDie(PlayerDeathEvent e) {
+    public void onEntityDamage(EntityDamageEvent e) {
+
+        if (e.getEntityType() != EntityType.PLAYER) {
+            return;
+        }
 
         if (!game.isActive()) {
             return;
         }
 
-        Player p = e.getEntity();
+        Player p = (Player) e.getEntity();
         GamePlayer gamePlayer = game.getGamePlayer(p);
+        if (gamePlayer == null) {
+            return;
+        }
+
+        // TODO: may have to cancel event, but setting damage to zero hopefully keeps the sound effect
+        e.setDamage(0);
+        gamePlayer.regenHealth();
 
     }
 

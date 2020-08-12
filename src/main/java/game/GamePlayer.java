@@ -26,12 +26,16 @@ public class GamePlayer {
     }
 
     public void regenHealth() {
+        player.setHealth(getMaxHealth());
+    }
+
+    public int getMaxHealth() {
         AttributeInstance maxHealthAttribute = player.getAttribute(Attribute.GENERIC_MAX_HEALTH);
         int maxHealth = 20;
         if (maxHealthAttribute != null) {
             maxHealth = (int) maxHealthAttribute.getValue();
         }
-        player.setHealth(maxHealth);
+        return maxHealth;
     }
 
 
