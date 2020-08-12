@@ -38,8 +38,8 @@ public class Game {
         plugin.getServer().getPluginManager().registerEvents(new GamePlayerListener(this), plugin);
 
         // TODO: this can be changed to allow more than two teams
-        teams.add(new Team("BLU", CAPTIME, Material.BLUE_WOOL, spawnRegions.get(0)));
-        teams.add(new Team("RED", CAPTIME, Material.RED_WOOL, spawnRegions.get(1)));
+        teams.add(new Team("BLU", CAPTIME, spawnRegions.get(0), Material.BLUE_WOOL));
+        teams.add(new Team("RED", CAPTIME, spawnRegions.get(1), Material.RED_WOOL));
 
     }
 

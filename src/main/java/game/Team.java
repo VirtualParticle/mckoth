@@ -22,8 +22,9 @@ public class Team {
     private final Region spawnRegion;
     private int timerTask;
     private int points = 0;
+    private float respawnLength = 10;
 
-    public Team(String name, long captime, Material identifier, Region spawnRegion) {
+    public Team(String name, long captime, Region spawnRegion, Material identifier) {
         this.name = name;
         this.timer = new Timer(captime);
         this.spawnRegion = spawnRegion;
@@ -33,7 +34,7 @@ public class Team {
     }
 
     public Team(String name, long captime, Region spawnRegion) {
-        this(name, captime, Material.AIR, spawnRegion);
+        this(name, captime, spawnRegion, Material.AIR);
     }
 
     public List<GamePlayer> getPlayers() {
@@ -78,6 +79,14 @@ public class Team {
 
         return new Location(world, x, y, z);
 
+    }
+
+    public float getRespawnLength() {
+        return respawnLength;
+    }
+
+    public void setRespawnLength(float respawnLength) {
+        this.respawnLength = respawnLength;
     }
 
 }
