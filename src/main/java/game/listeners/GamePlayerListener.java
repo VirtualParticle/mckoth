@@ -4,16 +4,12 @@ import arena.capturePoint.ActiveCapturePoint;
 import arena.Map;
 import game.Game;
 import game.GamePlayer;
-import game.Team;
 import org.bukkit.Location;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import utils.Utils;
 
@@ -82,6 +78,7 @@ public class GamePlayerListener implements Listener {
         // TODO: may have to cancel event, but setting damage to zero hopefully keeps the sound effect
         e.setDamage(0);
         gamePlayer.regenHealth();
+        gamePlayer.spectate(p.getLocation());
 
     }
 
