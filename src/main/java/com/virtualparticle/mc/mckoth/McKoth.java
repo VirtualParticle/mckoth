@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 public final class McKoth extends JavaPlugin {
 
     private static McKoth plugin;
-    private static I18n i18n = I18n.getInstance();
+    private static final I18n i18n = I18n.getInstance();
 
     private Logger logger;
     private List<Game> games;
