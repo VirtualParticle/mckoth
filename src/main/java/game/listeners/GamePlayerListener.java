@@ -85,10 +85,12 @@ public class GamePlayerListener implements Listener {
             return;
         }
 
-        // TODO: may have to cancel event, but setting damage to zero hopefully keeps the sound effect
-        event.setDamage(0);
-        gamePlayer.regenHealth();
-        gamePlayer.spectate(p.getLocation());
+        if (event.getFinalDamage() < 1) {
+            // TODO: may have to cancel event, but setting damage to zero hopefully keeps the sound effect
+            event.setDamage(0);
+            gamePlayer.regenHealth();
+            gamePlayer.spectate(p.getLocation());
+        }
 
     }
 
