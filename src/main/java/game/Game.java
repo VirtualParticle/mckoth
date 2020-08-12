@@ -62,7 +62,10 @@ public class Game {
     public void start() {
 
         active = true; // TODO: maybe move to follow warmup, maybe not
-        teams.forEach(Team::enableTimer);
+        teams.forEach(team -> {
+            team.enableTimer();
+            team.getPlayers().forEach(GamePlayer::respawn);
+        });
 
     }
 

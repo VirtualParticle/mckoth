@@ -127,9 +127,8 @@ public class GamePlayer {
 
     }
 
-    private void respawn() {
+    public void respawn() {
 
-        stopSpectating();
         player.teleport(team.createRespawnLocation());
 
     }
