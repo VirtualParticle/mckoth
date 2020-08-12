@@ -25,6 +25,7 @@ public class GamePlayer {
 
     public GamePlayer(Player player, Team team) {
         this.player = player;
+        this.team = team;
         plugin = McKoth.getPlugin();
     }
 
