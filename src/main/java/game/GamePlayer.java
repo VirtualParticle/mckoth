@@ -50,7 +50,7 @@ public class GamePlayer {
         }
 
         double distance = 5; // how far the camera should be
-        float pitch = 45; // 90 is down, -90 is up, 0 is horizon
+        float pitch = 30; // 90 is down, -90 is up, 0 is horizon
         float yaw = location.getYaw(); // 0 is positive z, 270 is positive x
         double height = Math.sin(Math.toRadians(pitch)) * distance;
         double length = Math.cos(Math.toRadians(pitch)) * distance;
