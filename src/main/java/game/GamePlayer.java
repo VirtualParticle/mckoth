@@ -73,10 +73,7 @@ public class GamePlayer {
 
     public void spectate(Entity entity) {
 
-        if (spectatingLocation) {
-            spectatingLocation = false;
-        }
-
+        spectatingLocation = false;
         spectating = true;
 
         if (player.getGameMode() != GameMode.SPECTATOR) {
