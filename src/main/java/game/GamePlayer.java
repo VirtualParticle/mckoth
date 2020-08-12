@@ -119,7 +119,6 @@ public class GamePlayer {
             Player target = team.getPlayers().get((int) (team.getPlayers().size() * Math.random())).getPlayer();
             spectate(target);
             scheduler.scheduleSyncDelayedTask(plugin, () -> {
-                stopSpectating();
                 respawn();
             }, (int) (20 * team.getRespawnTime()));
 
@@ -129,6 +128,7 @@ public class GamePlayer {
 
     public void respawn() {
 
+        stopSpectating();
         player.teleport(team.createRespawnLocation());
 
     }
