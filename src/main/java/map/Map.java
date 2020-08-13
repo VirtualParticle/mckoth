@@ -28,6 +28,14 @@ public class Map {
         return capturePoints;
     }
 
+    public boolean addCapturePoint(CapturePoint capturePoint) {
+        if (capturePoints.contains(capturePoint)) {
+            return false;
+        }
+        capturePoints.add(capturePoint);
+        return true;
+    }
+
     public static List<Map> getMaps() {
         return maps;
     }

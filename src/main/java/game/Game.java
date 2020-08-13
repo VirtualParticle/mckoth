@@ -24,7 +24,7 @@ public class Game {
     private final int targetScore;
     private boolean active = false;
 
-    public Game(Map map, int id, int targetScore, List<Region> spawnRegions) {
+    public Game(Map map, int id, int targetScore, List<List<Region>> spawnRegions) {
         this.map = map;
         this.id = id;
         this.targetScore = targetScore;

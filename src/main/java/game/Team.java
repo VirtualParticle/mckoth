@@ -19,22 +19,22 @@ public class Team {
     private final List<GamePlayer> players;
     private final Timer timer;
     private final Material identifier;
-    private final Region spawnRegion;
+    private final List<Region> spawnRegions;
     private int timerTask;
     private int points = 0;
     private float respawnTime = 10;
 
-    public Team(String name, long captime, Region spawnRegion, Material identifier) {
+    public Team(String name, long captime, List<Region> spawnRegions, Material identifier) {
         this.name = name;
         this.timer = new Timer(captime);
-        this.spawnRegion = spawnRegion;
+        this.spawnRegions = spawnRegions;
         this.identifier = identifier;
         players = new ArrayList<>();
         plugin = McKoth.getPlugin();
     }
 
-    public Team(String name, long captime, Region spawnRegion) {
-        this(name, captime, spawnRegion, Material.AIR);
+    public Team(String name, long captime, List<Region> spawnRegions) {
+        this(name, captime, spawnRegions, Material.AIR);
     }
 
     public List<GamePlayer> getPlayers() {
@@ -66,11 +66,13 @@ public class Team {
         return identifier;
     }
 
-    public Region getSpawnRegion() {
-        return spawnRegion;
+    public List<Region> getSpawnRegions() {
+        return spawnRegions;
     }
 
     public Location createRespawnLocation() {
+
+        Region spawnRegion = spawnRegions.get((int) (Math.random() * spawnRegions.size()));
 
         World world = BukkitAdapter.adapt(Objects.requireNonNull(spawnRegion.getWorld()));
         double x = spawnRegion.getMinimumPoint().getX() + spawnRegion.getWidth() * Math.random();
