@@ -36,4 +36,8 @@ public class Map {
         return name;
     }
 
+    public static Map getMapByName(String name) {
+        return maps.stream().filter(map -> map.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
+    }
+
 }
