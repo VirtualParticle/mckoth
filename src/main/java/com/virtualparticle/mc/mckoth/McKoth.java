@@ -1,6 +1,7 @@
 package com.virtualparticle.mc.mckoth;
 
 import I18n.I18n;
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import game.Game;
 import game.listeners.GamePlayerListener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -17,10 +18,19 @@ public final class McKoth extends JavaPlugin {
 
     private Logger logger;
     private List<Game> games;
+    private WorldEditPlugin worldEdit;
 
     @Override
     public void onEnable() {
-        // Plugin startup logic
+
+        worldEdit = (WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit");
+        if (worldEdit == null || !worldEdit.isEnabled()) {
+            log(Level.SEVERE, i18n.getString("dependencyNotFound", "WorldEdit"));
+            log(Level.SEVERE, i18n.getString("fatalError"));
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+
         plugin = this;
         games = new ArrayList<>();
         logger = Logger.getLogger(this.getClass().getName());
@@ -28,7 +38,7 @@ public final class McKoth extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+
     }
 
     public static McKoth getPlugin() {
@@ -37,6 +47,10 @@ public final class McKoth extends JavaPlugin {
 
     public List<Game> getGames() {
         return games;
+    }
+
+    public WorldEditPlugin getWorldEdit() {
+        return worldEdit;
     }
 
     public void log(Level level, String message) {
