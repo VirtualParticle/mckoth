@@ -18,14 +18,14 @@ public class Map {
     private final List<List<Region>> spawnRegions;
     private final String name;
 
-    public Map(Region region, String name, List<CapturePoint> capturePoints, List<List<Region>> spawnRegions, int teams) {
+    public Map(Region region, String name, int teams) {
         this.region = region;
         this.name = name;
-        this.capturePoints = capturePoints;
-        this.spawnRegions = spawnRegions;
+        this.capturePoints = new ArrayList<>();
+        spawnRegions = new ArrayList<>();
 
         for (int i = 0; i < teams; i++) {
-            this.spawnRegions.add(new ArrayList<>());
+            spawnRegions.add(new ArrayList<>());
         }
 
     }
@@ -66,16 +66,20 @@ public class Map {
         return spawnRegions;
     }
 
-    public void startCreatingMap(Map map, Player player) {
+    public static void startCreatingMap(Map map, Player player) {
         mapsInCreation.put(player, map);
     }
 
-    public Map removeMapInCreation(Player player) {
+    public static Map removeMapInCreation(Player player) {
         return mapsInCreation.remove(player);
     }
 
-    public void completeMap(Player player) {
+    public static void completeMap(Player player) {
         maps.add(mapsInCreation.remove(player));
+    }
+
+    public static Map getMapInCreation(Player player) {
+        return mapsInCreation.get(player);
     }
 
 }
