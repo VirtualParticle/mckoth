@@ -1,4 +1,4 @@
-package arena.capturePoint;
+package map.capturePoint;
 
 import com.sk89q.worldedit.regions.Region;
 

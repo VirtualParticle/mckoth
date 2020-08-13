@@ -1,7 +1,7 @@
 package game.listeners;
 
-import arena.capturePoint.ActiveCapturePoint;
-import arena.events.PointCaptureEvent;
+import map.capturePoint.ActiveCapturePoint;
+import map.events.PointCaptureEvent;
 import game.Game;
 import game.Team;
 import org.bukkit.event.EventHandler;

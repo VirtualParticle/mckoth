@@ -1,6 +1,6 @@
-package arena;
+package map;
 
-import arena.capturePoint.CapturePoint;
+import map.capturePoint.CapturePoint;
 import com.sk89q.worldedit.regions.Region;
 
 import java.util.ArrayList;

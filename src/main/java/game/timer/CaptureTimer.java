@@ -1,7 +1,7 @@
 package game.timer;
 
-import arena.capturePoint.ActiveCapturePoint;
-import arena.events.PointCaptureEvent;
+import map.capturePoint.ActiveCapturePoint;
+import map.events.PointCaptureEvent;
 import com.virtualparticle.mc.mckoth.McKoth;
 import game.Team;
 import utils.MathUtils;

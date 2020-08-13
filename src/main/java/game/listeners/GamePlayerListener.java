@@ -1,7 +1,7 @@
 package game.listeners;
 
-import arena.capturePoint.ActiveCapturePoint;
-import arena.Map;
+import map.capturePoint.ActiveCapturePoint;
+import map.Map;
 import game.Game;
 import game.GamePlayer;
 import org.bukkit.Location;

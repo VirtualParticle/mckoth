@@ -1,7 +1,7 @@
 package game;
 
-import arena.capturePoint.ActiveCapturePoint;
-import arena.Map;
+import map.capturePoint.ActiveCapturePoint;
+import map.Map;
 import com.sk89q.worldedit.regions.Region;
 import com.virtualparticle.mc.mckoth.McKoth;
 import game.listeners.CapturePointListener;

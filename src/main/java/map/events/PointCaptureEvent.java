@@ -1,6 +1,6 @@
-package arena.events;
+package map.events;
 
-import arena.capturePoint.ActiveCapturePoint;
+import map.capturePoint.ActiveCapturePoint;
 import game.Team;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
