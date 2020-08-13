@@ -16,6 +16,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import utils.WorldEditUtils;
 
+import java.util.List;
+
 public class CommandKothMap extends PluginCommand {
 
 
@@ -66,12 +68,79 @@ public class CommandKothMap extends PluginCommand {
 
             String name = args[1];
 
+            int teamCount = 2;
+            if (args.length >= 3) {
+                try {
+                    teamCount = Integer.parseInt(args[2]);
+                } catch (NumberFormatException ignored) {
+
+                }
+            }
+
             WorldEditPlugin worldEdit = plugin.getWorldEdit();
             Region region = WorldEditUtils.getSelectionRegion(p);
             if (region == null) {
                 throw new PluginCommandException(i18n.getString("invalidWorldEditSelection"));
             }
 
+            Map map = new Map(region, name, teamCount);
+            Map.startCreatingMap(map, p);
+
+        }
+
+        if (args[0].equalsIgnoreCase("add")) {
+
+            if (!(sender instanceof Player)) {
+                throw new IllegalSenderException(sender);
+            }
+
+            Player p = (Player) sender;
+            Map map = Map.getMapInCreation(p);
+            if (map == null) {
+                throw new PluginCommandException(i18n.getString("notCreatingAMap"));
+            }
+
+            if (args.length < 2) {
+                throw new MalformedCommandException(i18n.getString("commandKothMapAddUsage"));
+            }
+
+            if (args[1].equalsIgnoreCase("spawn")) {
+
+                int team;
+                if (args.length < 3) {
+                    throw new MalformedCommandException("commandKothMapAddSpawnUsage");
+                }
+
+                try {
+                    team = Integer.parseInt(args[2]);
+                } catch (NumberFormatException e) {
+                    throw new MalformedCommandException("commandKothMapAddSpawnUsage");
+                }
+
+                WorldEditPlugin worldEdit = plugin.getWorldEdit();
+                Region region = WorldEditUtils.getSelectionRegion(p);
+                if (region == null) {
+                    throw new PluginCommandException(i18n.getString("invalidWorldEditSelection"));
+                }
+
+                if (region.equals(map.getRegion()) && (args.length < 4 || !args[3].equalsIgnoreCase("override"))) {
+                    throw new PluginCommandException(i18n.getString("spawnRegionSameAsMapRegion"));
+                }
+
+                boolean regionInUse = false;
+                for (List<Region> spawnRegions : map.getSpawnRegions()) {
+                    for (Region testRegion : spawnRegions) {
+                        regionInUse = testRegion.equals(region);
+                    }
+                }
+
+                if (regionInUse) {
+                    throw new PluginCommandException(i18n.getString("spawnRegionInUse"));
+                }
+
+                map.addSpawnRegion(region, team);
+
+            }
 
         }
 
