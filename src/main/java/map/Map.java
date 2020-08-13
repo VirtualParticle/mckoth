@@ -12,12 +12,14 @@ public class Map {
 
     private final Region region;
     private final List<CapturePoint> capturePoints;
+    private final List<List<Region>> spawnRegions;
     private final String name;
 
-    public Map(Region region, String name) {
+    public Map(Region region, String name, List<CapturePoint> capturePoints, List<List<Region>> spawnRegions) {
         this.region = region;
         this.name = name;
-        capturePoints = new ArrayList<>();
+        this.capturePoints = capturePoints;
+        this.spawnRegions = spawnRegions;
     }
 
     public Region getRegion() {
@@ -46,6 +48,10 @@ public class Map {
 
     public static Map getMapByName(String name) {
         return maps.stream().filter(map -> map.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
+    }
+
+    public List<List<Region>> getSpawnRegions() {
+        return spawnRegions;
     }
 
 }

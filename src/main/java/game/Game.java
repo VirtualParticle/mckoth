@@ -24,7 +24,7 @@ public class Game {
     private final int targetScore;
     private boolean active = false;
 
-    public Game(Map map, int id, int targetScore, List<List<Region>> spawnRegions) {
+    public Game(Map map, int id, int targetScore) {
         this.map = map;
         this.id = id;
         this.targetScore = targetScore;
@@ -38,8 +38,8 @@ public class Game {
         plugin.getServer().getPluginManager().registerEvents(new GamePlayerListener(this), plugin);
 
         // TODO: this can be changed to allow more than two teams
-        teams.add(new Team("BLU", CAPTIME, spawnRegions.get(0), Material.BLUE_WOOL));
-        teams.add(new Team("RED", CAPTIME, spawnRegions.get(1), Material.RED_WOOL));
+        teams.add(new Team("BLU", CAPTIME, map.getSpawnRegions().get(0), Material.BLUE_WOOL));
+        teams.add(new Team("RED", CAPTIME, map.getSpawnRegions().get(1), Material.RED_WOOL));
 
     }
 
