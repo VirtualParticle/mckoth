@@ -4,7 +4,7 @@ import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.Region;
 import org.bukkit.Location;
 
-public class Utils {
+public class MathUtils {
 
     private static final double GAMMA = 0.5772156649; // Euler–Mascheroni constant (for approximating harmonic series)
 

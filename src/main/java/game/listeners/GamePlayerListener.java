@@ -12,7 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import utils.Utils;
+import utils.MathUtils;
 
 public class GamePlayerListener implements Listener {
 
@@ -51,12 +51,12 @@ public class GamePlayerListener implements Listener {
             It is also possible to implement a cool-down on this so it only runs it every-so-often */
 
         Map map = game.getMap();
-        if (Utils.insideRegion(locationTo, map.getRegion())) {
+        if (MathUtils.insideRegion(locationTo, map.getRegion())) {
             for (ActiveCapturePoint point : game.getActiveCapturePoints()) {
 
-                if (Utils.insideRegion(locationTo, point.getCapturePoint().getRegion())
-                        || Utils.insideRegion(locationFrom, point.getCapturePoint().getRegion())) {
-                    if (Utils.insideRegion(locationTo, point.getCapturePoint().getRegion())) {
+                if (MathUtils.insideRegion(locationTo, point.getCapturePoint().getRegion())
+                        || MathUtils.insideRegion(locationFrom, point.getCapturePoint().getRegion())) {
+                    if (MathUtils.insideRegion(locationTo, point.getCapturePoint().getRegion())) {
                         point.addPlayer(gamePlayer);
                     } else {
                         point.removePlayer(gamePlayer);

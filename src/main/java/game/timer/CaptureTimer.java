@@ -4,7 +4,7 @@ import arena.capturePoint.ActiveCapturePoint;
 import arena.events.PointCaptureEvent;
 import com.virtualparticle.mc.mckoth.McKoth;
 import game.Team;
-import utils.Utils;
+import utils.MathUtils;
 
 public class CaptureTimer extends Timer {
 
@@ -80,7 +80,7 @@ public class CaptureTimer extends Timer {
     }
 
     public void setCapturingTeam(Team capturingTeam, int count) {
-        float speed = (float) Utils.harmonicApproximation(count);
+        float speed = (float) MathUtils.harmonicApproximation(count);
         if (capturingTeam == null) {
             interval = -1;
         } else if (capturingTeam != this.teamWithCaptime) {
