@@ -20,6 +20,10 @@ public class CommandKothMap extends PluginCommand {
             throw new IncorrectUsageException(this);
         }
 
+        if (args[0].equalsIgnoreCase("list")) {
+
+        }
+
         return true;
 
     }

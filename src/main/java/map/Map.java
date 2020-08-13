@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Map {
 
-    private static final List<Map> MAPS = new ArrayList<>();
+    private static final List<Map> maps = new ArrayList<>();
 
     private final Region region;
     private final List<CapturePoint> capturePoints;
@@ -27,7 +27,7 @@ public class Map {
     }
 
     public static List<Map> getMaps() {
-        return MAPS;
+        return maps;
     }
 
 }
