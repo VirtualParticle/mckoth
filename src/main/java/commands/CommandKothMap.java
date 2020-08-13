@@ -10,6 +10,7 @@ import commands.exceptions.IncorrectUsageException;
 import commands.exceptions.PluginCommandException;
 import commands.exceptions.MalformedCommandException;
 import map.Map;
+import map.capturePoint.CapturePoint;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -52,7 +53,11 @@ public class CommandKothMap extends PluginCommand {
             sender.sendMessage(ChatColor.GOLD + i18n.getString("mapInfoTitle", map.getName()));
             sender.sendMessage("Info placeholder"); // TODO: implement
 
+            return true;
+
         }
+
+        WorldEditPlugin worldEdit = plugin.getWorldEdit();
 
         if (args[0].equalsIgnoreCase("create")) {
 
@@ -77,7 +82,6 @@ public class CommandKothMap extends PluginCommand {
                 }
             }
 
-            WorldEditPlugin worldEdit = plugin.getWorldEdit();
             Region region = WorldEditUtils.getSelectionRegion(p);
             if (region == null) {
                 throw new PluginCommandException(i18n.getString("invalidWorldEditSelection"));
@@ -85,6 +89,8 @@ public class CommandKothMap extends PluginCommand {
 
             Map map = new Map(region, name, teamCount);
             Map.startCreatingMap(map, p);
+
+            return true;
 
         }
 
@@ -117,14 +123,13 @@ public class CommandKothMap extends PluginCommand {
                     throw new MalformedCommandException("commandKothMapAddSpawnUsage");
                 }
 
-                WorldEditPlugin worldEdit = plugin.getWorldEdit();
                 Region region = WorldEditUtils.getSelectionRegion(p);
                 if (region == null) {
                     throw new PluginCommandException(i18n.getString("invalidWorldEditSelection"));
                 }
 
                 if (region.equals(map.getRegion()) && (args.length < 4 || !args[3].equalsIgnoreCase("override"))) {
-                    throw new PluginCommandException(i18n.getString("spawnRegionSameAsMapRegion"));
+                    throw new PluginCommandException(i18n.getString("regionSameAsMapRegion"));
                 }
 
                 boolean regionInUse = false;
@@ -140,11 +145,45 @@ public class CommandKothMap extends PluginCommand {
 
                 map.addSpawnRegion(region, team);
 
+                return true;
+
             }
+
+            if (args[1].equalsIgnoreCase("point")) {
+
+                Region region = WorldEditUtils.getSelectionRegion(p);
+                if (region == null) {
+                    throw new PluginCommandException(i18n.getString("invalidWorldEditSelection"));
+                }
+
+                if (region.equals(map.getRegion()) && (args.length < 4 || !args[3].equalsIgnoreCase("override"))) {
+                    throw new PluginCommandException(i18n.getString("regionSameAsMapRegion"));
+                }
+
+                boolean regionInUse = false;
+                for (List<Region> spawnRegions : map.getSpawnRegions()) {
+                    for (Region testRegion : spawnRegions) {
+                        regionInUse = testRegion.equals(region);
+                    }
+                }
+
+                if (regionInUse) {
+                    throw new PluginCommandException(i18n.getString("spawnRegionInUse"));
+                }
+
+                // TODO: allow for captime customization
+                CapturePoint capturePoint = new CapturePoint(region);
+                map.addCapturePoint(capturePoint);
+
+                return true;
+
+            }
+
+            throw new IncorrectUsageException(this);
 
         }
 
-        return true;
+        throw new IncorrectUsageException(this);
 
     }
 
