@@ -12,9 +12,11 @@ public class Map {
 
     private final Region region;
     private final List<CapturePoint> capturePoints;
+    private final String name;
 
-    public Map(Region region) {
+    public Map(Region region, String name) {
         this.region = region;
+        this.name = name;
         capturePoints = new ArrayList<>();
     }
 
@@ -28,6 +30,10 @@ public class Map {
 
     public static List<Map> getMaps() {
         return maps;
+    }
+
+    public String getName() {
+        return name;
     }
 
 }
