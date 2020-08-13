@@ -24,8 +24,10 @@ public class Map {
         this.capturePoints = capturePoints;
         this.spawnRegions = spawnRegions;
 
-        this.spawnRegions.add(new ArrayList<>());
-        this.spawnRegions.add(new ArrayList<>());
+        for (int i = 0; i < teams; i++) {
+            this.spawnRegions.add(new ArrayList<>());
+        }
+
     }
 
     public Region getRegion() {
