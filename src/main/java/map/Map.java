@@ -8,6 +8,8 @@ import java.util.List;
 
 public class Map {
 
+    private static final List<Map> maps = new ArrayList<>();
+
     private final Region region;
     private final List<CapturePoint> capturePoints;
 
