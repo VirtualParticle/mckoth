@@ -17,6 +17,7 @@ public abstract class PluginCommand implements CommandExecutor {
         this.name = name;
         plugin = McKoth.getPlugin();
         i18n = I18n.getInstance();
+        plugin.getCommand(name).setExecutor(this);
     }
 
     @Override

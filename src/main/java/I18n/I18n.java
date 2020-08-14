@@ -11,10 +11,11 @@ public class I18n {
 
     private static final Locale ROOT_LOCALE = Locale.ROOT;
     private static final Locale DEFAULT_LOCALE = Locale.getDefault();
-    private static final String MESSAGES_BASE_NAME = "I18n.messages";
-    private static final I18n INSTANCE = new I18n();
+    private static final String MESSAGES_BASE_NAME = "messages";
 
-    private final McKoth plugin;
+    private static I18n INSTANCE;
+
+    private McKoth plugin;
     private Locale locale;
     private ResourceBundle bundle;
     private boolean validLocale;
@@ -25,8 +26,6 @@ public class I18n {
 
     public I18n(Locale locale) {
         this.locale = locale;
-        createBundle(locale);
-        plugin = McKoth.getPlugin();
     }
 
     public Locale getLocale() {
@@ -38,10 +37,18 @@ public class I18n {
     }
 
     public static I18n getInstance() {
-        return INSTANCE;
+        return INSTANCE == null ? new I18n() : INSTANCE;
     }
 
-    private void createBundle(Locale locale) {
+    public void setPlugin(McKoth plugin) {
+        this.plugin = plugin;
+    }
+
+    public void createBundle() {
+        createBundle(locale);
+    }
+
+    public void createBundle(Locale locale) {
 
         try {
             bundle = ResourceBundle.getBundle(MESSAGES_BASE_NAME, locale);

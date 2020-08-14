@@ -18,9 +18,10 @@ import java.util.List;
 
 public class CommandKothMap extends PluginCommand {
 
+    private static final String NAME = "KothMap";
 
-    protected CommandKothMap(String name) {
-        super(name);
+    public CommandKothMap() {
+        super(NAME);
     }
 
     @Override
@@ -36,6 +37,7 @@ public class CommandKothMap extends PluginCommand {
         }
 
         if (args[0].equalsIgnoreCase("list")) {
+            sender.sendMessage("list");
             sender.sendMessage(ChatColor.GOLD + i18n.getString("mapListTitle"));
             Map.getMaps().forEach(map -> sender.sendMessage("•" + map.getName()));
             return true;

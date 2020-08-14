@@ -2,6 +2,7 @@ package com.virtualparticle.mc.mckoth;
 
 import I18n.I18n;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import commands.CommandKothMap;
 import game.Game;
 import game.listeners.GamePlayerListener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -14,14 +15,19 @@ import java.util.logging.Logger;
 public final class McKoth extends JavaPlugin {
 
     private static McKoth plugin;
+    private static Logger logger;
     private static final I18n i18n = I18n.getInstance();
 
-    private Logger logger;
     private List<Game> games;
     private WorldEditPlugin worldEdit;
 
     @Override
     public void onEnable() {
+
+        plugin = this;
+        logger = getLogger();
+        i18n.setPlugin(plugin);
+        i18n.createBundle();
 
         worldEdit = (WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit");
         if (worldEdit == null || !worldEdit.isEnabled()) {
@@ -31,9 +37,8 @@ public final class McKoth extends JavaPlugin {
             return;
         }
 
-        plugin = this;
         games = new ArrayList<>();
-        logger = Logger.getLogger(this.getClass().getName());
+
     }
 
     @Override
@@ -59,6 +64,12 @@ public final class McKoth extends JavaPlugin {
 
     public void log(String message) {
         log(Level.INFO, message);
+    }
+
+    private void registerCommands() {
+
+        new CommandKothMap();
+
     }
 
 }

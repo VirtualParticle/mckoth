@@ -7,6 +7,7 @@ authors: [VirtualParticle]
 description: Minecraft King of the Hill
 website: https://github.com/VirtualParticle
 commands:
-  KothMap:
+  kothMap:
     aliases: [kmap, km]
     description: Create and modify KOTH Maps
+    usage: /<command> [list|info|create|delete|add|complete] [...]
