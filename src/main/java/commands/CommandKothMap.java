@@ -37,7 +37,6 @@ public class CommandKothMap extends PluginCommand {
         }
 
         if (args[0].equalsIgnoreCase("list")) {
-            sender.sendMessage("list");
             sender.sendMessage(ChatColor.GOLD + i18n.getString("mapListTitle"));
             Map.getMaps().forEach(map -> sender.sendMessage("•" + map.getName()));
             return true;
