@@ -110,6 +110,8 @@ public class CommandKothMap extends PluginCommand {
                 throw new PluginCommandException(i18n.getString("mapNotFound", args[1]));
             }
 
+            Map.startModifyingMap(map, p);
+
             p.sendMessage(i18n.getString("startModifyingMap", map.getName()));
 
         }
