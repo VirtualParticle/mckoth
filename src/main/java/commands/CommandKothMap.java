@@ -30,6 +30,11 @@ public class CommandKothMap extends PluginCommand {
             throw new IncorrectUsageException(this);
         }
 
+        Player p = null;
+        if (sender instanceof Player) {
+            p = (Player) sender;
+        }
+
         if (args[0].equalsIgnoreCase("list")) {
             sender.sendMessage(ChatColor.GOLD + i18n.getString("mapListTitle"));
             Map.getMaps().forEach(map -> sender.sendMessage("•" + map.getName()));
@@ -58,11 +63,9 @@ public class CommandKothMap extends PluginCommand {
 
         if (args[0].equalsIgnoreCase("create")) {
 
-            if (!(sender instanceof Player)) {
+            if (p == null) {
                 throw new IllegalSenderException(sender);
             }
-
-            Player p = (Player) sender;
 
             if (args.length < 2) {
                 throw new MalformedCommandException(i18n.getString("commandKothMapCreateUsage"));
@@ -86,18 +89,37 @@ public class CommandKothMap extends PluginCommand {
 
             Map map = new Map(region, name, teamCount);
             Map.startModifyingMap(map, p);
+            p.sendMessage(i18n.getString("startCreatingMap", map.getName()));
 
             return true;
 
         }
 
-        if (args[0].equalsIgnoreCase("add")) {
+        if (args[0].equalsIgnoreCase("modify")) {
 
-            if (!(sender instanceof Player)) {
+            if (p == null) {
                 throw new IllegalSenderException(sender);
             }
 
-            Player p = (Player) sender;
+            if (args.length < 2) {
+                throw new MalformedCommandException(i18n.getString("commandKothMapModifyUsage"));
+            }
+
+            Map map = Map.getMapByName(args[1]);
+            if (map == null) {
+                throw new PluginCommandException(i18n.getString("mapNotFound", args[1]));
+            }
+
+            p.sendMessage(i18n.getString("startModifyingMap", map.getName()));
+
+        }
+
+        if (args[0].equalsIgnoreCase("add")) {
+
+            if (p == null) {
+                throw new IllegalSenderException(sender);
+            }
+
             Map map = Map.getMapInModification(p);
             if (map == null) {
                 throw new PluginCommandException(i18n.getString("notModifyingMap"));
