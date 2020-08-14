@@ -114,6 +114,8 @@ public class CommandKothMap extends PluginCommand {
 
             p.sendMessage(i18n.getString("startModifyingMap", map.getName()));
 
+            return true;
+
         }
 
         if (args[0].equalsIgnoreCase("add")) {
@@ -217,6 +219,8 @@ public class CommandKothMap extends PluginCommand {
 
             Map.completeMap(p);
             p.sendMessage(i18n.getString("endModifyingMap", map.getName()));
+
+            return true;
 
         }
 
