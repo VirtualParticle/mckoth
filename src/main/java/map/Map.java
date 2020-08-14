@@ -30,6 +30,10 @@ public class Map {
 
     }
 
+    public static void removeMap(Map map) {
+        maps.remove(map);
+    }
+
     public Region getRegion() {
         return region;
     }

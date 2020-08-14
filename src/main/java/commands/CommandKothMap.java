@@ -224,6 +224,29 @@ public class CommandKothMap extends PluginCommand {
 
         }
 
+        if (args[0].equalsIgnoreCase("delete")) {
+
+            if (p == null) {
+                throw new IllegalSenderException(sender);
+            }
+
+            if (args.length < 2) {
+                throw new MalformedCommandException(i18n.getString("commandKothMapDeleteUsage"));
+            }
+
+            Map map = Map.getMapByName(args[1]);
+            if (map == null) {
+                throw new PluginCommandException(i18n.getString("mapNotFound", args[1]));
+            }
+
+            Map.removeMap(map);
+
+            p.sendMessage(i18n.getString("mapDeleted", map.getName()));
+
+            return true;
+
+        }
+
         throw new IncorrectUsageException(this);
 
     }
