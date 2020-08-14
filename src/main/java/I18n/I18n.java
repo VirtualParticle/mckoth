@@ -37,7 +37,7 @@ public class I18n {
     }
 
     public static I18n getInstance() {
-        return INSTANCE == null ? new I18n() : INSTANCE;
+        return INSTANCE == null ? INSTANCE = new I18n() : INSTANCE;
     }
 
     public void setPlugin(McKoth plugin) {
@@ -53,27 +53,11 @@ public class I18n {
         try {
             bundle = ResourceBundle.getBundle(MESSAGES_BASE_NAME, locale);
             validLocale = true;
-            plugin.log(Level.INFO, formatString(bundle.getString("loadedLocale"), locale.toString()));
-            return;
-        } catch (MissingResourceException ignored) {
-
-        }
-
-        try {
-            bundle = ResourceBundle.getBundle(MESSAGES_BASE_NAME, DEFAULT_LOCALE);
-            validLocale = true;
-            plugin.log(Level.WARNING, formatString(
-                    bundle.getString("cantFindLocale"), locale.toString(), DEFAULT_LOCALE.toString()));
-            return;
-        } catch (MissingResourceException ignored) {
-
-        }
-
-        try {
-            bundle = ResourceBundle.getBundle(MESSAGES_BASE_NAME, ROOT_LOCALE);
-            validLocale = true;
-            plugin.log(Level.WARNING, formatString(
-                    bundle.getString("cantFindLocale"), locale.toString(), "ROOT"));
+            String localeString = bundle.getLocale().toString();
+            if (bundle.getLocale() == Locale.ROOT) {
+                localeString = "DEFAULT";
+            }
+            plugin.log(Level.INFO, formatString(bundle.getString("loadedLocale"), localeString));
         } catch (MissingResourceException e) {
             validLocale = false;
             plugin.log(Level.SEVERE, "No localization was found!");

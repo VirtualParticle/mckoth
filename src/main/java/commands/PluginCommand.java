@@ -11,26 +11,24 @@ public abstract class PluginCommand implements CommandExecutor {
 
     protected final String name;
     protected final McKoth plugin;
-    protected final I18n i18n;
+    protected final I18n i18n = I18n.getInstance();
 
     protected PluginCommand(String name) {
         this.name = name;
         plugin = McKoth.getPlugin();
-        i18n = I18n.getInstance();
         plugin.getCommand(name).setExecutor(this);
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
-        boolean result = false;
         try {
-            result = onPluginCommand(sender, command, label, args);
+            onPluginCommand(sender, command, label, args);
         } catch (PluginCommandException e) {
             sender.sendMessage(e.getMessage());
         }
 
-        return result;
+        return true;
 
     }
 
