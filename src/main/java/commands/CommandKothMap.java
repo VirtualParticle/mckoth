@@ -204,6 +204,22 @@ public class CommandKothMap extends PluginCommand {
 
         }
 
+        if (args[0].equalsIgnoreCase("complete")) {
+
+            if (p == null) {
+                throw new IllegalSenderException(sender);
+            }
+
+            Map map = Map.getMapInModification(p);
+            if (map == null) {
+                throw new PluginCommandException(i18n.getString("notModifyingMap"));
+            }
+
+            Map.completeMap(p);
+            p.sendMessage(i18n.getString("endModifyingMap", map.getName()));
+
+        }
+
         throw new IncorrectUsageException(this);
 
     }
