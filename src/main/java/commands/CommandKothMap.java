@@ -1,10 +1,7 @@
 package commands;
 
-import com.sk89q.worldedit.IncompleteRegionException;
-import com.sk89q.worldedit.LocalSession;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.regions.Region;
-import com.virtualparticle.mc.mckoth.McKoth;
 import commands.exceptions.IllegalSenderException;
 import commands.exceptions.IncorrectUsageException;
 import commands.exceptions.PluginCommandException;
@@ -88,7 +85,7 @@ public class CommandKothMap extends PluginCommand {
             }
 
             Map map = new Map(region, name, teamCount);
-            Map.startCreatingMap(map, p);
+            Map.startModifyingMap(map, p);
 
             return true;
 
@@ -101,9 +98,9 @@ public class CommandKothMap extends PluginCommand {
             }
 
             Player p = (Player) sender;
-            Map map = Map.getMapInCreation(p);
+            Map map = Map.getMapInModification(p);
             if (map == null) {
-                throw new PluginCommandException(i18n.getString("notCreatingAMap"));
+                throw new PluginCommandException(i18n.getString("notModifyingMap"));
             }
 
             if (args.length < 2) {

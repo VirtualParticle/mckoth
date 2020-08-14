@@ -11,7 +11,7 @@ import java.util.List;
 public class Map {
 
     private static final List<Map> maps = new ArrayList<>();
-    private static final java.util.Map<Player, Map> mapsInCreation = new HashMap<>();
+    private static final java.util.Map<Player, Map> mapsInModification = new HashMap<>();
 
     private final Region region;
     private final List<CapturePoint> capturePoints;
@@ -66,20 +66,21 @@ public class Map {
         return spawnRegions;
     }
 
-    public static void startCreatingMap(Map map, Player player) {
-        mapsInCreation.put(player, map);
+    public static void startModifyingMap(Map map, Player player) {
+        maps.remove(map);
+        mapsInModification.put(player, map);
     }
 
-    public static Map removeMapInCreation(Player player) {
-        return mapsInCreation.remove(player);
+    public static Map removeMapInModification(Player player) {
+        return mapsInModification.remove(player);
     }
 
     public static void completeMap(Player player) {
-        maps.add(mapsInCreation.remove(player));
+        maps.add(mapsInModification.remove(player));
     }
 
-    public static Map getMapInCreation(Player player) {
-        return mapsInCreation.get(player);
+    public static Map getMapInModification(Player player) {
+        return mapsInModification.get(player);
     }
 
 }
