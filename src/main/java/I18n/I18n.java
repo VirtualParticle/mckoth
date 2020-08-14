@@ -56,6 +56,7 @@ public class I18n {
             plugin.log(Level.INFO, formatString(bundle.getString("loadedLocale"), locale.toString()));
             return;
         } catch (MissingResourceException ignored) {
+
         }
 
         try {
