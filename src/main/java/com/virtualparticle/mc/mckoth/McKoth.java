@@ -38,6 +38,7 @@ public final class McKoth extends JavaPlugin {
         }
 
         games = new ArrayList<>();
+        registerCommands();
 
     }
 
