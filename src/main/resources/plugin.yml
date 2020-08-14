@@ -6,3 +6,7 @@ depend: [WorldEdit]
 authors: [VirtualParticle]
 description: Minecraft King of the Hill
 website: https://github.com/VirtualParticle
+commands:
+  KothMap:
+    aliases: [kmap, km]
+    description: Create and modify KOTH Maps
