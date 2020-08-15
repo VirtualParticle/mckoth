@@ -26,4 +26,8 @@ public class GameManager {
         return games;
     }
 
+    public Game getGameByMap(Map map) {
+        return games.stream().filter(game -> game.getMap() == map).findFirst().orElse(null);
+    }
+
 }

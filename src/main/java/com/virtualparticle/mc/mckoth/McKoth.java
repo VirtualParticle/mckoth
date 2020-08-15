@@ -4,6 +4,7 @@ import I18n.I18n;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import commands.CommandKothMap;
 import game.Game;
+import game.GameManager;
 import game.listeners.GamePlayerListener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -18,8 +19,8 @@ public final class McKoth extends JavaPlugin {
     private static Logger logger;
     private static final I18n i18n = I18n.getInstance();
 
-    private List<Game> games;
     private WorldEditPlugin worldEdit;
+    private GameManager gameManager;
 
     @Override
     public void onEnable() {
@@ -37,7 +38,7 @@ public final class McKoth extends JavaPlugin {
             return;
         }
 
-        games = new ArrayList<>();
+        gameManager = new GameManager();
         registerCommands();
 
     }
@@ -49,10 +50,6 @@ public final class McKoth extends JavaPlugin {
 
     public static McKoth getPlugin() {
         return plugin;
-    }
-
-    public List<Game> getGames() {
-        return games;
     }
 
     public WorldEditPlugin getWorldEdit() {
@@ -73,4 +70,7 @@ public final class McKoth extends JavaPlugin {
 
     }
 
+    public GameManager getGameManager() {
+        return gameManager;
+    }
 }

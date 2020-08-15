@@ -7,6 +7,7 @@ import game.timer.Timer;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,6 +90,18 @@ public class Team {
 
     public void setRespawnTime(float respawnTime) {
         this.respawnTime = respawnTime;
+    }
+
+    public void addPlayer(GamePlayer player) {
+        players.add(player);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public GamePlayer remove(Player player) {
+        return players.stream().filter(p -> p.getPlayer() == player).findFirst().orElse(null);
     }
 
 }
