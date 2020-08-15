@@ -9,5 +9,8 @@ website: https://github.com/VirtualParticle
 commands:
   kothMap:
     aliases: [kmap, km]
-    description: Create and modify KOTH Maps
+    description: Create and modify KOTH maps
     usage: /<command> [list|info|create|delete|add|complete] [...]
+  koth:
+    description: Join and leave KOTH maps
+    usage: /<command> [join|leave|start] [map]
