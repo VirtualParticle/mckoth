@@ -30,6 +30,7 @@ public final class McKoth extends JavaPlugin {
         logger = getLogger();
         i18n.setPlugin(plugin);
         i18n.createBundle();
+        gameManager = new GameManager();
 
         worldEdit = (WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit");
         if (worldEdit == null || !worldEdit.isEnabled()) {
@@ -38,8 +39,7 @@ public final class McKoth extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
-
-        gameManager = new GameManager();
+        
         registerCommands();
 
     }
