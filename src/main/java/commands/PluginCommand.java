@@ -13,7 +13,7 @@ public abstract class PluginCommand implements CommandExecutor {
     protected final McKoth plugin;
     protected final I18n i18n = I18n.getInstance();
 
-    protected PluginCommand(String name) {
+    public PluginCommand(String name) {
         this.name = name;
         plugin = McKoth.getPlugin();
         plugin.getCommand(name).setExecutor(this);

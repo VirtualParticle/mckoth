@@ -17,7 +17,7 @@ public class CommandKoth extends PluginCommand {
 
     private final McKoth plugin;
 
-    protected CommandKoth() {
+    public CommandKoth() {
         super(NAME);
         plugin = McKoth.getPlugin();
     }

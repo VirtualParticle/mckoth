@@ -2,6 +2,7 @@ package com.virtualparticle.mc.mckoth;
 
 import I18n.I18n;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+import commands.CommandKoth;
 import commands.CommandKothMap;
 import game.Game;
 import game.GameManager;
@@ -66,7 +67,9 @@ public final class McKoth extends JavaPlugin {
 
     private void registerCommands() {
 
+        // TODO: see if there's a better way to do this
         new CommandKothMap();
+        new CommandKoth();
 
     }
 
