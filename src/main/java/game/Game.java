@@ -46,6 +46,7 @@ public class Game {
     }
 
     public GamePlayer addPlayer(Player player) {
+
         Team smallestTeam = teams.get(0); // assuming teams.size() > 0
         for (Team team : teams) {
             if (team.getPlayers().size() < smallestTeam.getPlayers().size()) {
@@ -54,6 +55,9 @@ public class Game {
         }
         GamePlayer gamePlayer = new GamePlayer(player, smallestTeam);
         smallestTeam.addPlayer(gamePlayer);
+
+        gamePlayer.respawn();
+
         return gamePlayer;
     }
 
