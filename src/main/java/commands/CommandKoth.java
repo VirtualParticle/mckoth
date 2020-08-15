@@ -43,7 +43,7 @@ public class CommandKoth extends PluginCommand {
 
             Map map = Map.getMapByName(args[1]);
             if (map == null) {
-                throw new PluginCommandException(i18n.getString("mapNotFound"));
+                throw new PluginCommandException(i18n.getString("mapNotFound", args[1]));
             }
 
             Game game = plugin.getGameManager().getGameByMap(map);
