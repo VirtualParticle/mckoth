@@ -18,7 +18,7 @@ public class WorldEditUtils {
         LocalSession session = worldEdit.getSession(player);
         Region region = null;
         try {
-            region = session.getSelection(session.getSelectionWorld());
+            region = session.getSelection(session.getSelectionWorld()).clone();
         } catch (IncompleteRegionException ignored) {
 
         }

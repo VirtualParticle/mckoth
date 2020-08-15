@@ -24,7 +24,11 @@ public class Game {
     private final int targetScore;
     private boolean active = false;
 
-    public Game(Map map, int id, int targetScore) {
+    protected Game(Map map, int id) {
+        this(map, id, map.getTargetScore());
+    }
+
+    protected Game(Map map, int id, int targetScore) {
         this.map = map;
         this.id = id;
         this.targetScore = targetScore;

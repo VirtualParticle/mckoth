@@ -25,7 +25,7 @@ public abstract class PluginCommand implements CommandExecutor {
         try {
             onPluginCommand(sender, command, label, args);
         } catch (PluginCommandException e) {
-            sender.sendMessage(e.getMessage());
+            sender.sendMessage(e.getMessage().replace(i18n.getString("commandPlaceholder"), name));
         }
 
         return true;

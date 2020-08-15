@@ -88,7 +88,8 @@ public class CommandKothMap extends PluginCommand {
                 throw new PluginCommandException(i18n.getString("invalidWorldEditSelection"));
             }
 
-            Map map = new Map(region, name, teamCount);
+            // TODO: allow for variation in target score
+            Map map = new Map(region, name, teamCount, 2);
             Map.startModifyingMap(map, p);
             p.sendMessage(i18n.getString("startCreatingMap", map.getName()));
 
@@ -138,13 +139,13 @@ public class CommandKothMap extends PluginCommand {
 
                 int team;
                 if (args.length < 3) {
-                    throw new MalformedCommandException("commandKothMapAddSpawnUsage");
+                    throw new MalformedCommandException(i18n.getString("commandKothMapAddSpawnUsage"));
                 }
 
                 try {
                     team = Integer.parseInt(args[2]);
                 } catch (NumberFormatException e) {
-                    throw new MalformedCommandException("commandKothMapAddSpawnUsage");
+                    throw new MalformedCommandException(i18n.getString("commandKothMapAddSpawnUsage"));
                 }
 
                 Region region = WorldEditUtils.getSelectionRegion(p);
@@ -168,6 +169,7 @@ public class CommandKothMap extends PluginCommand {
                 }
 
                 map.addSpawnRegion(region, team);
+                sender.sendMessage(i18n.getString("addedSpawnRegion", Integer.toString(team)));
 
                 return true;
 
@@ -198,6 +200,7 @@ public class CommandKothMap extends PluginCommand {
                 // TODO: allow for captime customization
                 CapturePoint capturePoint = new CapturePoint(region);
                 map.addCapturePoint(capturePoint);
+                sender.sendMessage(i18n.getString("addedCapturePoint"));
 
                 return true;
 

@@ -17,11 +17,13 @@ public class Map {
     private final List<CapturePoint> capturePoints;
     private final List<List<Region>> spawnRegions;
     private final String name;
+    private final int targetScore; // default target score for map, can be changed for a game
 
-    public Map(Region region, String name, int teams) {
+    public Map(Region region, String name, int teams, int targetScore) {
         this.region = region;
         this.name = name;
-        this.capturePoints = new ArrayList<>();
+        this.targetScore = targetScore;
+        capturePoints = new ArrayList<>();
         spawnRegions = new ArrayList<>();
 
         for (int i = 0; i < teams; i++) {
@@ -87,4 +89,7 @@ public class Map {
         return mapsInModification.get(player);
     }
 
+    public int getTargetScore() {
+        return targetScore;
+    }
 }
