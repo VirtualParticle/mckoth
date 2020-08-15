@@ -39,7 +39,7 @@ public final class McKoth extends JavaPlugin {
             getServer().getPluginManager().disablePlugin(this);
             return;
         }
-        
+
         registerCommands();
 
     }
