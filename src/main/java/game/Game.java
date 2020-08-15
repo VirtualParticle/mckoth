@@ -57,7 +57,7 @@ public class Game {
         return gamePlayer;
     }
 
-    public void removePlayer(Player player) {
+    public boolean removePlayer(Player player) {
 
         GamePlayer gamePlayer = null;
         for (Team team : teams) {
@@ -68,8 +68,10 @@ public class Game {
         if (gamePlayer != null) {
             GamePlayer finalGamePlayer = gamePlayer;
             activeCapturePoints.forEach(cp -> cp.removePlayer(finalGamePlayer));
+            return true;
         }
 
+        return false;
     }
 
     public Map getMap() {
@@ -126,4 +128,7 @@ public class Game {
         return gamePlayer;
     }
 
+    public boolean hasPlayer(Player player) {
+        return teams.stream().anyMatch(team -> team.hasPlayer(player));
+    }
 }

@@ -104,4 +104,7 @@ public class Team {
         return players.stream().filter(p -> p.getPlayer() == player).findFirst().orElse(null);
     }
 
+    public boolean hasPlayer(Player player) {
+        return players.stream().anyMatch(gp -> gp.getPlayer() == player);
+    }
 }

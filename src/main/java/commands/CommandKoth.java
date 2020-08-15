@@ -31,11 +31,15 @@ public class CommandKoth extends PluginCommand {
 
         Player player = (Player) sender;
 
-        if (args.length < 2) {
+        if (args.length < 1) {
             throw new IncorrectUsageException(this);
         }
 
         if (args[0].equalsIgnoreCase("join")) {
+
+            if (args.length < 2) {
+                throw new IncorrectUsageException(this);
+            }
 
             Map map = Map.getMapByName(args[1]);
             if (map == null) {
@@ -49,6 +53,19 @@ public class CommandKoth extends PluginCommand {
 
             GamePlayer gamePlayer = game.addPlayer(player);
             player.sendMessage(i18n.getString("joinedTeam", gamePlayer.getTeam().getName()));
+
+            return true;
+
+        }
+
+        if (args[0].equalsIgnoreCase("leave")) {
+
+            Game game = plugin.getGameManager().getGameByPlayer(player);
+            if (game.removePlayer(player)) {
+                player.sendMessage(i18n.getString("leftGame"));
+            } else {
+                player.sendMessage(i18n.getString("notInGame"));
+            }
 
             return true;
 
