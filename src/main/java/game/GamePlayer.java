@@ -131,7 +131,10 @@ public class GamePlayer {
         stopSpectating();
         regenHealth();
         player.setGameMode(GameMode.ADVENTURE);
-        player.teleport(team.createRespawnLocation());
+        Location respawnLocation = team.createRespawnLocation();
+        if (respawnLocation != null) {
+            player.teleport(team.createRespawnLocation());
+        }
 
     }
 
