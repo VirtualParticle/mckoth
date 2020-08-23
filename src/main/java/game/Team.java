@@ -73,6 +73,10 @@ public class Team {
 
     public Location createRespawnLocation() {
 
+        if (spawnRegions.isEmpty()) {
+            return null;
+        }
+
         Region spawnRegion = spawnRegions.get((int) (Math.random() * spawnRegions.size()));
 
         World world = BukkitAdapter.adapt(Objects.requireNonNull(spawnRegion.getWorld()));
