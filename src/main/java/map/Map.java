@@ -4,7 +4,6 @@ import map.capturePoint.CapturePoint;
 import com.sk89q.worldedit.regions.Region;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -96,7 +95,7 @@ public class Map implements ConfigurationSerializable {
     }
 
     @Override
-    public java.util.@NotNull Map<String, Object> serialize() {
+    public java.util.Map<String, Object> serialize() {
 
         java.util.Map<String, Object> map = new HashMap<>();
         map.put("region", region);

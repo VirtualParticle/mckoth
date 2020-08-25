@@ -7,7 +7,6 @@ import com.sk89q.worldedit.world.World;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +25,7 @@ public class SerializableCuboidRegion extends CuboidRegion implements Configurat
     }
 
     @Override
-    public @NotNull Map<String, Object> serialize() {
+    public Map<String, Object> serialize() {
 
         Map<String, Object> map = new HashMap<>();
         org.bukkit.World bukkitWorld = BukkitAdapter.adapt(world);
