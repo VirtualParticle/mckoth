@@ -2,13 +2,15 @@ package map;
 
 import map.capturePoint.CapturePoint;
 import com.sk89q.worldedit.regions.Region;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class Map {
+public class Map implements ConfigurationSerializable {
 
     private static final List<Map> maps = new ArrayList<>();
     private static final java.util.Map<Player, Map> mapsInModification = new HashMap<>();
@@ -92,4 +94,30 @@ public class Map {
     public int getTargetScore() {
         return targetScore;
     }
+
+    @Override
+    public java.util.@NotNull Map<String, Object> serialize() {
+
+        java.util.Map<String, Object> map = new HashMap<>();
+        map.put("region", region);
+        map.put("capturePoints", capturePoints);
+        map.put("spawnRegions", spawnRegions);
+        map.put("name", name);
+        map.put("targetScore", targetScore);
+
+        return map;
+
+    }
+
+    public Map(java.util.Map<String, Object> data) {
+
+        region = (Region) data.get("region");
+        capturePoints = (List<CapturePoint>) data.get("capturePoints");
+        spawnRegions = (List<List<Region>>) data.get("spawnRegions");
+        name = (String) data.get("name");
+        targetScore = (int) data.get("targetScore");
+
+    }
+
+
 }

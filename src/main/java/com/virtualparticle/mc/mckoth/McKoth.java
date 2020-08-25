@@ -7,8 +7,17 @@ import commands.CommandKothMap;
 import game.Game;
 import game.GameManager;
 import game.listeners.GamePlayerListener;
+import map.Map;
+import map.capturePoint.CapturePoint;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -40,12 +49,38 @@ public final class McKoth extends JavaPlugin {
             return;
         }
 
+        serializeClasses();
         registerCommands();
+
+        FileConfiguration maps = getConfigFile("maps.yml");
+        for (String key : maps.getKeys(false)) {
+
+            Map map = maps.getObject(key, Map.class);
+            if (map == null) {
+                log(i18n.getString("errorLoadingMap", key));
+            } else {
+                Map.getMaps().add(map);
+                log(i18n.getString("loadedMap", map.getName()));
+            }
+
+        }
+
 
     }
 
     @Override
     public void onDisable() {
+
+        FileConfiguration maps = getConfigFile("maps.yml");
+        for (Map map : Map.getMaps()) {
+            maps.set(map.getName(), map);
+        }
+
+        try {
+            maps.save(new File(getDataFolder(), "maps.yml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -73,7 +108,20 @@ public final class McKoth extends JavaPlugin {
 
     }
 
+    private void serializeClasses() {
+
+        ConfigurationSerialization.registerClass(Map.class);
+        ConfigurationSerialization.registerClass(SerializableCuboidRegion.class);
+        ConfigurationSerialization.registerClass(CapturePoint.class);
+
+    }
+
+    private FileConfiguration getConfigFile(String name) {
+        return YamlConfiguration.loadConfiguration(new File(getDataFolder(), name));
+    }
+
     public GameManager getGameManager() {
         return gameManager;
     }
+
 }
