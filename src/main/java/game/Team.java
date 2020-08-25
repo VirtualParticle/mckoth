@@ -84,7 +84,12 @@ public class Team {
         double y = spawnRegion.getMinimumPoint().getY();
         double z = spawnRegion.getMinimumPoint().getZ() + spawnRegion.getLength() * Math.random();
 
-        return new Location(world, x, y, z);
+        Location location = new Location(world, x, y ,z);
+        if (!location.getBlock().isPassable()) {
+            location.add(0, 1, 0);
+        }
+
+        return location;
 
     }
 
