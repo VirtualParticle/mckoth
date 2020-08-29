@@ -85,8 +85,6 @@ public class CaptureTimer extends Timer {
         int opposingPlayers = players.size() - capturingPlayers;
         double speed = (MathUtils.harmonicApproximation(capturingPlayers) * (opposingPlayers == 0 ? 1 : 0));
 
-        String s = speed + ", ";
-
         if (players.size() == 0) {
             speed = teamWithCaptime == null && capturingTeam == null ? 0 : -0.5; // natural captime decay
         } else if (capturingTeam != teamWithCaptime && teamWithCaptime != null) {
