@@ -143,6 +143,7 @@ public class Game {
     private void endGame(Team winningTeam) {
         active = false; // TODO: this might end up being moved to endRound()
         teams.forEach(Team::disableTimer);
+        activeCapturePoints.forEach(ActiveCapturePoint::disableTimer);
     }
 
     public boolean isActive() {
