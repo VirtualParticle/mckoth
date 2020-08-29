@@ -49,6 +49,10 @@ public class ActiveCapturePoint {
         return name;
     }
 
+    public void reset() {
+        timer.reset();
+    }
+
     public void setPaused(boolean paused) {
         timer.setPaused(paused);
     }

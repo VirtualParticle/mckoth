@@ -135,6 +135,10 @@ public class Game {
 
     public void endRound(Team winningTeam) {
         teams.forEach(team -> team.getTimer().reset());
+        activeCapturePoints.forEach(point -> {
+            point.setPaused(true);
+            point.reset();
+        });
         if (winningTeam.incrementPoints() >= targetScore) {
             endGame(winningTeam);
         }
