@@ -102,7 +102,8 @@ public class CaptureTimer extends Timer {
     public String getProgressBar() {
         ChatColor leftColor = teamWithCaptime != null ? teamWithCaptime.getColor() : ChatColor.GRAY;
         ChatColor rightColor = controllingTeam != null ? controllingTeam.getCapColor() : ChatColor.GRAY;
-        return ChatUtils.generateProgressBar(leftColor, rightColor, 125 / 10, time / originalTime);
+        int index = game.getTeams().indexOf(teamWithCaptime);
+        return ChatUtils.generateProgressBar(leftColor, rightColor, 125 / 10, index % 2 == 0, time / originalTime);
     }
 
     public Team getControllingTeam() {
