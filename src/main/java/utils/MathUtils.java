@@ -8,7 +8,7 @@ public class MathUtils {
 
     private static final double GAMMA = 0.5772156649; // Euler–Mascheroni constant (for approximating harmonic series)
 
-    public static double harmonicApproximation(int n) {
+    public static double harmonicApproximation(long n) {
         if (n == 0) {
             return 0;
         }

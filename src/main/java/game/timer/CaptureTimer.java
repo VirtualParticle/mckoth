@@ -1,6 +1,7 @@
 package game.timer;
 
 import game.Game;
+import game.GamePlayer;
 import map.capturePoint.ActiveCapturePoint;
 import map.events.PointCaptureEvent;
 import com.virtualparticle.mc.mckoth.McKoth;
@@ -12,6 +13,8 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import utils.ChatUtils;
 import utils.MathUtils;
+
+import java.util.List;
 
 public class CaptureTimer extends Timer {
 
@@ -36,13 +39,13 @@ public class CaptureTimer extends Timer {
     @Override
     public void reset() {
         super.reset();
-        teamWithCaptime = null;
-        capturingTeam = null;
+        updateSpeed();
         System.out.println("reset");
     }
 
     @Override
     public void run() {
+
         super.run();
 
         Objective objective = Bukkit.getServer().getScoreboardManager().getMainScoreboard().getObjective("score");
@@ -50,14 +53,17 @@ public class CaptureTimer extends Timer {
 
 //        System.out.println(time + ", " + (time - interval) + ", " + paused);
 
+        if (teamWithCaptime == null && capturingTeam != null && interval != 0) {
+            teamWithCaptime = capturingTeam;
+        }
+
         if (time <= 0) {
 
             if (capturingTeam == teamWithCaptime) {
                 // point captured
-                System.out.println("point captured by " + capturingTeam);
+                System.out.println("point captured by " + capturingTeam.getName());
                 McKoth.getPlugin().getServer().getPluginManager().callEvent(
-                        new PointCaptureEvent(controllingTeam, capturingTeam, capturePoint)
-                );
+                        new PointCaptureEvent(controllingTeam, capturingTeam, capturePoint));
                 if (controllingTeam != null) {
                     controllingTeam.getTimer().setPaused(true);
                 }
@@ -65,21 +71,37 @@ public class CaptureTimer extends Timer {
                 controllingTeam.getTimer().setPaused(false);
                 teamWithCaptime = null;
                 capturingTeam = null;
-                interval = 0;
             }
             reset();
 
         } else if (time > originalTime && capturingTeam != null) {
             // point capture time expired
-            capturingTeam = null;
-            interval = 0;
+            teamWithCaptime = null;
             reset();
         }
 
-        if (time > originalTime) {
-            interval = 0;
-            reset();
+    }
+
+    public void updateSpeed() {
+
+        List<GamePlayer> players = capturePoint.getPlayers();
+        int capturingPlayers = (int) players.stream().filter(player -> player.getTeam() == capturingTeam).count();
+        int opposingPlayers = players.size() - capturingPlayers;
+        double speed = (MathUtils.harmonicApproximation(capturingPlayers) * (opposingPlayers == 0 ? 1 : 0));
+
+        String s = speed + ", ";
+
+        if (players.size() == 0) {
+            speed = teamWithCaptime == null && capturingTeam == null ? 0 : -0.5; // natural captime decay
+        } else if (capturingTeam != teamWithCaptime && teamWithCaptime != null) {
+            speed *= -1; // removing other team's captime
+        } else if (capturingTeam == controllingTeam) {
+            speed = 0;
         }
+
+        interval = (float) speed;
+        System.out.println(s + speed);
+        System.out.println("captime: " + teamWithCaptime + " capturing: " + capturingTeam);
 
     }
 
@@ -93,26 +115,24 @@ public class CaptureTimer extends Timer {
         return controllingTeam;
     }
 
-    public void setControllingTeam(Team controllingTeam) {
-        this.controllingTeam = controllingTeam;
+    public void setControllingTeam(Team team) {
+        this.controllingTeam = team;
     }
 
     public Team getCapturingTeam() {
         return capturingTeam;
     }
 
-    public void setCapturingTeam(Team capturingTeam, int count) {
-        float speed = (float) MathUtils.harmonicApproximation(count);
-        if (capturingTeam == null) {
-            interval = -1;
-        } else if (capturingTeam != teamWithCaptime && teamWithCaptime != null) {
-            interval = -2 * speed; // captime decreases faster when another team is standing on point
-        } else {
-            interval = speed;
-            teamWithCaptime = capturingTeam;
-        }
-        this.capturingTeam = capturingTeam;
-        System.out.println(capturingTeam + " now capturing the point. Speed=" + speed + " Interval=" + interval);
+    public void setCapturingTeam(Team team) {
+        this.capturingTeam = team;
+    }
+
+    public void setTeamWithCaptime(Team team) {
+        this.teamWithCaptime = team;
+    }
+
+    public Team getTeamWithCaptime() {
+        return teamWithCaptime;
     }
 
 }
