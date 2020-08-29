@@ -70,6 +70,8 @@ public class CommandKoth extends PluginCommand {
             }
             game.removePlayer(player);
             player.sendMessage(i18n.getString("leftGame"));
+            
+            // TODO: teleport the player out of the map or something
 
             return true;
 
