@@ -41,6 +41,10 @@ public class CommandKoth extends PluginCommand {
                 throw new IncorrectUsageException(this);
             }
 
+            if (plugin.getGameManager().getGameByPlayer(player) != null) {
+                throw new PluginCommandException(i18n.getString("alreadyInGame"));
+            }
+
             Map map = Map.getMapByName(args[1]);
             if (map == null) {
                 throw new PluginCommandException(i18n.getString("mapNotFound", args[1]));
