@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class CapturePoint implements ConfigurationSerializable {
 
-    private static final long DEFAULT_CAPTIME = 60 * 3;
+    private static final long DEFAULT_CAPTIME = 20 * 16; // 16 seconds
 
     private final long capTime;
     private final Region region;
