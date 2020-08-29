@@ -29,6 +29,8 @@ public class Game {
     private final McKoth plugin;
     private final int targetScore;
     private boolean active = false;
+    private boolean frozen;
+    private boolean started;
 
     protected Game(Map map, int id) {
         this(map, id, map.getTargetScore());
@@ -102,7 +104,7 @@ public class Game {
         return activeCapturePoints;
     }
 
-    public void start() {
+    public void setup() {
 
         active = true; // TODO: maybe move to follow warmup, maybe not
         Scoreboard scoreboard = Bukkit.getServer().getScoreboardManager().getMainScoreboard();
@@ -111,8 +113,6 @@ public class Game {
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
 
         teams.forEach(team -> {
-            team.enableTimer();
-            team.getPlayers().forEach(GamePlayer::respawn);
             Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
                 Score score = objective.getScore(team.getName());
                 score.setScore((int) team.getTimer().getTime());
@@ -133,21 +133,53 @@ public class Game {
 
     }
 
+    public void startRound() {
+
+        int spawnFreezeTime = 5 * 20;
+
+        teams.forEach(team -> {
+            team.enableTimer();
+            team.getPlayers().forEach(GamePlayer::respawn);
+        });
+
+        frozen = true; // make to wait until the players are moved to spawn to freeze
+
+        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+            frozen = false;
+            started = true;
+            activeCapturePoints.forEach(point -> {
+                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                    point.setPaused(false); // point is locked for the first few seconds
+                }, 20 * 15);
+            });
+        }, spawnFreezeTime);
+
+    }
+
     public void endRound(Team winningTeam) {
+
         teams.forEach(team -> team.getTimer().reset());
         activeCapturePoints.forEach(point -> {
             point.setPaused(true);
             point.reset();
         });
+
         if (winningTeam.incrementPoints() >= targetScore) {
             endGame(winningTeam);
         }
+
+        // endgame
+        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+
+        }, 15 * 20);
+
     }
 
     private void endGame(Team winningTeam) {
         active = false; // TODO: this might end up being moved to endRound()
         teams.forEach(Team::disableTimer);
         activeCapturePoints.forEach(ActiveCapturePoint::disableTimer);
+        started = false;
     }
 
     public boolean isActive() {
@@ -168,5 +200,13 @@ public class Game {
 
     public boolean hasPlayer(Player player) {
         return teams.stream().anyMatch(team -> team.hasPlayer(player));
+    }
+
+    public boolean isFrozen() {
+        return frozen;
+    }
+
+    public boolean isStarted() {
+        return started;
     }
 }

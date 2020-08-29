@@ -53,6 +53,7 @@ public class CommandKoth extends PluginCommand {
             Game game = plugin.getGameManager().getGameByMap(map);
             if (game == null) {
                 game = plugin.getGameManager().createGame(map);
+                game.setup();
             }
 
             GamePlayer gamePlayer = game.addPlayer(player);
@@ -70,7 +71,7 @@ public class CommandKoth extends PluginCommand {
             }
             game.removePlayer(player);
             player.sendMessage(i18n.getString("leftGame"));
-            
+
             // TODO: teleport the player out of the map or something
 
             return true;
@@ -84,11 +85,11 @@ public class CommandKoth extends PluginCommand {
                 throw new PluginCommandException(i18n.getString("notInGame"));
             }
 
-            if (game.isActive()) {
+            if (game.isStarted()) {
                 throw new PluginCommandException(i18n.getString("gameAlreadyStarted"));
             }
 
-            game.start();
+            game.startRound();
             // TODO: maybe don't send a message and just start the game
             player.sendMessage(i18n.getString("startedGame"));
 

@@ -42,6 +42,12 @@ public class CaptureTimer extends Timer {
         updateSpeed();
     }
 
+    public void clear() {
+        controllingTeam = null;
+        teamWithCaptime = null;
+        capturingTeam = null;
+    }
+
     @Override
     public void run() {
 

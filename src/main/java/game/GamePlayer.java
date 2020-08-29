@@ -69,9 +69,6 @@ public class GamePlayer {
             player.setGameMode(GameMode.SPECTATOR);
         }
 
-        spectatingLocation = true;
-        spectating = true;
-
         double distance = 5; // how far the camera should be
         float pitch = 60; // 90 is down, -90 is up, 0 is horizon
         float yaw = location.getYaw(); // 0 is positive z, 270 is positive x
@@ -85,6 +82,9 @@ public class GamePlayer {
         Location camLocation = new Location(location.getWorld(), x, y, z, yaw, pitch);
 
         player.teleport(camLocation);
+
+        spectatingLocation = true;
+        spectating = true;
 
     }
 
@@ -116,6 +116,8 @@ public class GamePlayer {
     }
 
     public void die() {
+
+        // TODO: remove player from regions on die just in case they aren't removed by spectate
 
         regenHealth();
         spectate(player.getLocation());
@@ -166,7 +168,7 @@ public class GamePlayer {
         Bukkit.getScheduler().cancelTask(respawnTask);
         stopSpectating();
         regenHealth();
-//        player.setGameMode(GameMode.ADVENTURE);
+        player.setGameMode(DEFAULT_GAMEMODE);
         Location respawnLocation = team.createRespawnLocation();
         if (respawnLocation != null) {
             player.teleport(team.createRespawnLocation());

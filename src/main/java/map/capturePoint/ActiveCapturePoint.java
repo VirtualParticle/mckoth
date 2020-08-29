@@ -34,7 +34,6 @@ public class ActiveCapturePoint {
         this.players = new ArrayList<>();
 
         timer = new CaptureTimer((float) capTime / TICKS, this, game);
-        timer.setPaused(false);
         timer.updateSpeed();
         // TODO: maybe use the delay to keep points from being captured early (could do that another way)
         timerTask = scheduler.scheduleSyncRepeatingTask(plugin, timer, 0, TICKS);
@@ -51,6 +50,7 @@ public class ActiveCapturePoint {
 
     public void reset() {
         timer.reset();
+        timer.clear();
     }
 
     public void setPaused(boolean paused) {

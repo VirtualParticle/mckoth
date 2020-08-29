@@ -48,6 +48,12 @@ public class GamePlayerListener implements Listener {
         Location locationFrom = event.getFrom();
         Location locationTo = event.getTo();
 
+        if (game.isFrozen()) {
+            // let player spin around
+            event.setCancelled(locationFrom.distanceSquared(locationTo) != 0);
+            return;
+        }
+
         /* TODO: this might cause lag, so consider doing this on a regular interval instead of on event.
             It is also possible to implement a cool-down on this so it only runs it every-so-often */
 
@@ -103,6 +109,8 @@ public class GamePlayerListener implements Listener {
 
             event.setCancelled(true);
 
+        } else if (event.getCause() == PlayerTeleportEvent.TeleportCause.PLUGIN) {
+            onPlayerMove(event); // move event doesn't seem to be called automatically on plugin teleport
         }
 
     }
