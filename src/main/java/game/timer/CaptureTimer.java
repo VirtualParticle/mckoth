@@ -70,7 +70,7 @@ public class CaptureTimer extends Timer {
             }
             reset();
 
-        } else if (time > originalTime && capturingTeam != null) {
+        } else if (time > originalTime) {
             // point capture time expired
             teamWithCaptime = null;
             reset();
