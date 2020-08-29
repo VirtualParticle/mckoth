@@ -5,8 +5,15 @@ import map.Map;
 import com.virtualparticle.mc.mckoth.McKoth;
 import game.listeners.CapturePointListener;
 import game.listeners.GamePlayerListener;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
+import org.bukkit.scoreboard.Scoreboard;
+import utils.ChatUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,13 +42,14 @@ public class Game {
         teams = new ArrayList<>();
         plugin = McKoth.getPlugin();
         activeCapturePoints = new ArrayList<>();
+        map.getCapturePoints().forEach(capturePoint -> activeCapturePoints.add(capturePoint.getActiveCapturePoint(this)));
 
         plugin.getServer().getPluginManager().registerEvents(new CapturePointListener(this), plugin);
         plugin.getServer().getPluginManager().registerEvents(new GamePlayerListener(this), plugin);
 
         // TODO: this can be changed to allow more than two teams
-        teams.add(new Team("BLU", CAPTIME, map.getSpawnRegions().get(0), Material.BLUE_WOOL));
-        teams.add(new Team("RED", CAPTIME, map.getSpawnRegions().get(1), Material.RED_WOOL));
+        teams.add(new Team("BLU", CAPTIME, map.getSpawnRegions().get(0), Material.BLUE_WOOL, ChatColor.BLUE, ChatColor.DARK_BLUE));
+        teams.add(new Team("RED", CAPTIME, map.getSpawnRegions().get(1), Material.RED_WOOL, ChatColor.RED, ChatColor.DARK_RED));
 
     }
 
@@ -97,10 +105,31 @@ public class Game {
     public void start() {
 
         active = true; // TODO: maybe move to follow warmup, maybe not
+        Scoreboard scoreboard = Bukkit.getServer().getScoreboardManager().getMainScoreboard();
+        scoreboard.getObjectives().forEach(Objective::unregister); // TODO: move this somewhere else
+        Objective objective = scoreboard.registerNewObjective("score", "dummy", "Score");
+        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
+
         teams.forEach(team -> {
             team.enableTimer();
             team.getPlayers().forEach(GamePlayer::respawn);
+            Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
+                Score score = objective.getScore(team.getName());
+                score.setScore((int) team.getTimer().getTime());
+            }, 0, 20);
         });
+
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < activeCapturePoints.size(); i++) {
+                sb.append(activeCapturePoints.get(i).getProgressBar());
+                if (i < activeCapturePoints.size() - 1) {
+                    sb.append("    ");
+                }
+            }
+            String actionBar = sb.toString();
+            teams.forEach(team -> team.getPlayers().forEach(player -> ChatUtils.sendActionBar(player.getPlayer(), actionBar)));
+        }, 0, 5);
 
     }
 

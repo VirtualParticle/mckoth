@@ -1,6 +1,7 @@
 package map.capturePoint;
 
 import com.virtualparticle.mc.mckoth.McKoth;
+import game.Game;
 import game.GamePlayer;
 import game.timer.CaptureTimer;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -17,20 +18,22 @@ public class ActiveCapturePoint {
 
     private final CapturePoint capturePoint;
     private final String name;
+    private final Game game;
     private final CaptureTimer timer;
 
     private final List<GamePlayer> capturingPlayers;
     private final List<GamePlayer> opposingPlayers;
 
-    public ActiveCapturePoint(CapturePoint capturePoint, long capTime, String name) {
+    public ActiveCapturePoint(CapturePoint capturePoint, long capTime, String name, Game game) {
         this.capturePoint = capturePoint;
         this.name = name;
+        this.game = game;
         this.plugin = McKoth.getPlugin();
         this.scheduler = plugin.getServer().getScheduler();
         this.capturingPlayers = new ArrayList<>();
         this.opposingPlayers = new ArrayList<>();
 
-        timer = new CaptureTimer(capTime / TICKS, this);
+        timer = new CaptureTimer((float) capTime / TICKS, this, game);
         timer.setPaused(true);
         // TODO: maybe use the delay to keep points from being captured early (could do that another way)
         scheduler.scheduleSyncRepeatingTask(plugin, timer, 0, TICKS);
@@ -56,9 +59,10 @@ public class ActiveCapturePoint {
     }
 
     public void addPlayer(GamePlayer player) {
-        if (player.getTeam() == timer.getCapturingTeam() || timer.getCapturingTeam() == null) {
+        if ((player.getTeam() == timer.getCapturingTeam() || timer.getCapturingTeam() == null) && player.getTeam() != timer.getControllingTeam()) {
             capturingPlayers.add(player);
-            if (opposingPlayers.size() > 0) {
+            timer.setPaused(false);
+            if (opposingPlayers.size() == 0) {
                 timer.setCapturingTeam(player.getTeam(), capturingPlayers.size());
             }
         } else {
@@ -68,7 +72,11 @@ public class ActiveCapturePoint {
     }
 
     public void removePlayer(GamePlayer player) {
-        if (player.getTeam() == timer.getCapturingTeam()) {
+        System.out.println("capturing team is " + timer.getCapturingTeam() + " player team is " + player.getTeam());
+        if (timer.getCapturingTeam() == null) {
+            capturingPlayers.remove(player);
+            opposingPlayers.remove(player);
+        } else if (player.getTeam() == timer.getCapturingTeam()) {
             capturingPlayers.remove(player);
             timer.setCapturingTeam(player.getTeam(), capturingPlayers.size());
             if (capturingPlayers.size() == 0) {
@@ -90,6 +98,15 @@ public class ActiveCapturePoint {
                 timer.setPaused(false);
             }
         }
+        System.out.println("capturing: " + capturingPlayers.contains(player) + " opposing: " + opposingPlayers.contains(player));
+    }
+
+    public boolean containsPlayer(GamePlayer player) {
+        return capturingPlayers.contains(player) || opposingPlayers.contains(player);
+    }
+
+    public String getProgressBar() {
+        return timer.getProgressBar();
     }
 
 }

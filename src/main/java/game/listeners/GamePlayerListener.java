@@ -25,10 +25,6 @@ public class GamePlayerListener implements Listener {
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
 
-        if (!game.isActive()) {
-            return;
-        }
-
         Player p = event.getPlayer();
         GamePlayer gamePlayer = game.getGamePlayer(p);
         if (gamePlayer == null) {
@@ -37,10 +33,15 @@ public class GamePlayerListener implements Listener {
 
         if (gamePlayer.isSpectating()) {
 
+            // the reason this is nested is in case there should be special behavior for spectating entities as well
             if (gamePlayer.isSpectatingLocation()) {
                 event.setCancelled(true);
             }
 
+            return;
+        }
+
+        if (!game.isActive()) {
             return;
         }
 
@@ -56,9 +57,11 @@ public class GamePlayerListener implements Listener {
 
                 if (MathUtils.insideRegion(locationTo, point.getCapturePoint().getRegion())
                         || MathUtils.insideRegion(locationFrom, point.getCapturePoint().getRegion())) {
-                    if (MathUtils.insideRegion(locationTo, point.getCapturePoint().getRegion())) {
+                    if (MathUtils.insideRegion(locationTo, point.getCapturePoint().getRegion()) && !point.containsPlayer(gamePlayer)) {
+                        System.out.println("adding player");
                         point.addPlayer(gamePlayer);
-                    } else {
+                    } else if (!MathUtils.insideRegion(locationTo, point.getCapturePoint().getRegion()) && point.containsPlayer(gamePlayer)) {
+                        System.out.println("removing player");
                         point.removePlayer(gamePlayer);
                     }
                 }
@@ -75,17 +78,13 @@ public class GamePlayerListener implements Listener {
             return;
         }
 
-        if (!game.isActive()) {
-            return;
-        }
-
         Player p = (Player) event.getEntity();
         GamePlayer gamePlayer = game.getGamePlayer(p);
         if (gamePlayer == null) {
             return;
         }
 
-        if (event.getFinalDamage() < 1) {
+        if (p.getHealth() - event.getFinalDamage() < 1) {
             // TODO: may have to cancel event, but setting damage to zero hopefully keeps the sound effect
             event.setDamage(0);
             gamePlayer.die();

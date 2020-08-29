@@ -61,11 +61,30 @@ public class CommandKoth extends PluginCommand {
         if (args[0].equalsIgnoreCase("leave")) {
 
             Game game = plugin.getGameManager().getGameByPlayer(player);
-            if (game == null) {
+            if (game == null || game.hasPlayer(player)) {
                 throw new PluginCommandException(i18n.getString("notInGame"));
             }
             game.removePlayer(player);
             player.sendMessage(i18n.getString("leftGame"));
+
+            return true;
+
+        }
+
+        if (args[0].equalsIgnoreCase("start")) {
+
+            Game game = plugin.getGameManager().getGameByPlayer(player);
+            if (game == null) {
+                throw new PluginCommandException(i18n.getString("notInGame"));
+            }
+
+            if (game.isActive()) {
+                throw new PluginCommandException(i18n.getString("gameAlreadyStarted"));
+            }
+
+            game.start();
+            // TODO: maybe don't send a message and just start the game
+            player.sendMessage(i18n.getString("startedGame"));
 
             return true;
 

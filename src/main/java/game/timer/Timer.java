@@ -5,15 +5,15 @@ public class Timer implements Runnable {
     protected static float DEFAULT_INTERVAL = 1;
 
     protected boolean paused = true;
-    protected long originalTime;
-    protected long time;
+    protected float originalTime;
+    protected float time;
     protected float interval;
 
-    public Timer(long time) {
+    public Timer(float time) {
         this(time, DEFAULT_INTERVAL);
     }
 
-    public Timer(long time, float interval) {
+    public Timer(float time, float interval) {
         this.originalTime = time;
         this.time = time;
         this.interval = interval;
@@ -23,13 +23,13 @@ public class Timer implements Runnable {
         this.paused = paused;
     }
 
-    public void setInterval(long interval) {
+    public void setInterval(float interval) {
         this.interval = interval;
     }
 
     public void reset() {
         time = originalTime;
-        setPaused(true);
+//        setPaused(true);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class Timer implements Runnable {
 
     }
 
-    public long getTime() {
+    public float getTime() {
         return time;
     }
 

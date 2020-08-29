@@ -4,6 +4,7 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.regions.Region;
 import com.virtualparticle.mc.mckoth.McKoth;
 import game.timer.Timer;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -20,22 +21,26 @@ public class Team {
     private final List<GamePlayer> players;
     private final Timer timer;
     private final Material identifier;
+    private final ChatColor color;
+    private final ChatColor capColor; // color shown on cap meter when point is captured, usually darker version of color
     private final List<Region> spawnRegions;
     private int timerTask;
     private int points = 0;
     private float respawnTime = 10;
 
-    public Team(String name, long captime, List<Region> spawnRegions, Material identifier) {
+    public Team(String name, long captime, List<Region> spawnRegions, Material identifier, ChatColor color, ChatColor capColor) {
         this.name = name;
         this.timer = new Timer(captime);
         this.spawnRegions = spawnRegions;
         this.identifier = identifier;
+        this.color = color;
+        this.capColor = capColor;
         players = new ArrayList<>();
         plugin = McKoth.getPlugin();
     }
 
-    public Team(String name, long captime, List<Region> spawnRegions) {
-        this(name, captime, spawnRegions, Material.AIR);
+    public Team(String name, long captime, List<Region> spawnRegions, ChatColor color, ChatColor capColor) {
+        this(name, captime, spawnRegions, Material.AIR, color, capColor);
     }
 
     public List<GamePlayer> getPlayers() {
@@ -116,4 +121,13 @@ public class Team {
     public boolean hasPlayer(Player player) {
         return players.stream().anyMatch(gp -> gp.getPlayer() == player);
     }
+
+    public ChatColor getColor() {
+        return color;
+    }
+
+    public ChatColor getCapColor() {
+        return capColor;
+    }
+
 }

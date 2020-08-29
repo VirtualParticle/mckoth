@@ -1,6 +1,7 @@
 package map.capturePoint;
 
 import com.sk89q.worldedit.regions.Region;
+import game.Game;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 import java.util.HashMap;
@@ -22,12 +23,12 @@ public class CapturePoint implements ConfigurationSerializable {
         this.capTime = capTime;
     }
 
-    public ActiveCapturePoint getActiveCapturePoint(String name) {
-        return new ActiveCapturePoint(this, capTime, name);
+    public ActiveCapturePoint getActiveCapturePoint(Game game, String name) {
+        return new ActiveCapturePoint(this, capTime, name, game);
     }
 
-    public ActiveCapturePoint getActiveCapturePoint() {
-        return getActiveCapturePoint(null);
+    public ActiveCapturePoint getActiveCapturePoint(Game game) {
+        return getActiveCapturePoint(game, null);
     }
 
     public Region getRegion() {

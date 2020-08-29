@@ -26,7 +26,8 @@ import java.util.logging.Logger;
 public final class McKoth extends JavaPlugin {
 
     private static McKoth plugin;
-    private static Logger logger;
+    // TODO: make all references to this static
+    private static final Logger logger = Logger.getLogger("McKoth");
     private static final I18n i18n = I18n.getInstance();
 
     private WorldEditPlugin worldEdit;
@@ -36,9 +37,6 @@ public final class McKoth extends JavaPlugin {
     public void onEnable() {
 
         plugin = this;
-        logger = getLogger();
-        i18n.setPlugin(plugin);
-        i18n.createBundle();
         gameManager = new GameManager();
 
         worldEdit = (WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit");
@@ -92,11 +90,11 @@ public final class McKoth extends JavaPlugin {
         return worldEdit;
     }
 
-    public void log(Level level, String message) {
+    public static void log(Level level, String message) {
         logger.log(level, message);
     }
 
-    public void log(String message) {
+    public static void log(String message) {
         log(Level.INFO, message);
     }
 

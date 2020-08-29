@@ -1,6 +1,8 @@
 package game;
 
+import I18n.I18n;
 import com.virtualparticle.mc.mckoth.McKoth;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
@@ -8,6 +10,9 @@ import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitScheduler;
+import utils.ChatUtils;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class GamePlayer {
 
@@ -18,6 +23,9 @@ public class GamePlayer {
     private final Player player;
     private boolean spectating = false;
     private boolean spectatingLocation = false;
+    private final I18n i18n = I18n.getInstance();
+
+    private int respawnTask;
 
     public GamePlayer(Player player) {
         this(player, null);
@@ -65,14 +73,14 @@ public class GamePlayer {
         spectating = true;
 
         double distance = 5; // how far the camera should be
-        float pitch = 45; // 90 is down, -90 is up, 0 is horizon
+        float pitch = 60; // 90 is down, -90 is up, 0 is horizon
         float yaw = location.getYaw(); // 0 is positive z, 270 is positive x
         double height = Math.sin(Math.toRadians(pitch)) * distance;
         double length = Math.cos(Math.toRadians(pitch)) * distance;
 
         double x = location.getX() + Math.sin(Math.toRadians(yaw)) * length;
         double y = location.getY() + height;
-        double z = location.getZ() + Math.cos(Math.toRadians(yaw)) * length;
+        double z = location.getZ() - Math.cos(Math.toRadians(yaw)) * length;
 
         Location camLocation = new Location(location.getWorld(), x, y, z, yaw, pitch);
 
@@ -112,25 +120,53 @@ public class GamePlayer {
         regenHealth();
         spectate(player.getLocation());
 
+        float killCamLength = 3 * 20;
+        Player killer = player.getKiller();
+        if (killer != null) {
+            player.sendTitle("", i18n.getString("killedByPlayerMessage",
+                    killer.getName()), 0, (int) killCamLength + 5, 0);
+        } else {
+            player.sendTitle("", i18n.getString("killedByEnvironment"), 0, (int) killCamLength + 5, 0);
+        }
+
         BukkitScheduler scheduler = plugin.getServer().getScheduler();
-        float killCamLength = 3;
         scheduler.scheduleSyncDelayedTask(plugin, () -> {
 
             Player target = team.getPlayers().get((int) (team.getPlayers().size() * Math.random())).getPlayer();
-            spectate(target);
-            scheduler.scheduleSyncDelayedTask(plugin, () -> {
-                respawn();
-            }, (int) (20 * team.getRespawnTime()));
+            if (target != player && target != null) {
+                spectate(target);
+            }
 
-        }, (int) (20 * killCamLength));
+            AtomicInteger time = new AtomicInteger((int) team.getRespawnTime());
+            respawnTask = scheduler.scheduleSyncRepeatingTask(plugin, () -> {
+
+                String message;
+                if (time.get() > 1) {
+                    message = i18n.getString("respawnTimePlural", String.valueOf(time.get()));
+                } else if (time.get() == 1) {
+                    message = i18n.getString("respawnTimeSingular", String.valueOf(time.get()));
+                } else if (time.get() == 0) {
+                    message = i18n.getString("prepareToRespawn");
+                } else {
+                    message = "";
+                    respawn();
+                }
+
+                player.sendTitle("", message, 0, 25, 0);
+                time.decrementAndGet();
+
+            }, 0, 20);
+
+        }, (int) (killCamLength));
 
     }
 
     public void respawn() {
 
+        Bukkit.getScheduler().cancelTask(respawnTask);
         stopSpectating();
         regenHealth();
-        player.setGameMode(GameMode.ADVENTURE);
+//        player.setGameMode(GameMode.ADVENTURE);
         Location respawnLocation = team.createRespawnLocation();
         if (respawnLocation != null) {
             player.teleport(team.createRespawnLocation());

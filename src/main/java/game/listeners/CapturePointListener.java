@@ -6,6 +6,7 @@ import game.Game;
 import game.Team;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import utils.ChatUtils;
 
 public class CapturePointListener implements Listener {
 
@@ -25,7 +26,6 @@ public class CapturePointListener implements Listener {
         Team currentTeam = e.getCurrentTeam();
         Team capturingTeam = e.getCapturingTeam();
         ActiveCapturePoint capturePoint = e.getCapturePoint();
-
         if (capturingTeam.getTimer().getTime() <= 0) {
             game.endRound(capturingTeam);
         }
