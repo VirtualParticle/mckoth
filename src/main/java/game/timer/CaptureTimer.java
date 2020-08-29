@@ -40,7 +40,6 @@ public class CaptureTimer extends Timer {
     public void reset() {
         super.reset();
         updateSpeed();
-        System.out.println("reset");
     }
 
     @Override
@@ -51,8 +50,6 @@ public class CaptureTimer extends Timer {
         Objective objective = Bukkit.getServer().getScoreboardManager().getMainScoreboard().getObjective("score");
         objective.getScore("Capture Point " + capturePoint.getName()).setScore((int) time);
 
-//        System.out.println(time + ", " + (time - interval) + ", " + paused);
-
         if (teamWithCaptime == null && capturingTeam != null && interval != 0) {
             teamWithCaptime = capturingTeam;
         }
@@ -61,7 +58,6 @@ public class CaptureTimer extends Timer {
 
             if (capturingTeam == teamWithCaptime) {
                 // point captured
-                System.out.println("point captured by " + capturingTeam.getName());
                 McKoth.getPlugin().getServer().getPluginManager().callEvent(
                         new PointCaptureEvent(controllingTeam, capturingTeam, capturePoint));
                 if (controllingTeam != null) {
@@ -100,8 +96,6 @@ public class CaptureTimer extends Timer {
         }
 
         interval = (float) speed;
-        System.out.println(s + speed);
-        System.out.println("captime: " + teamWithCaptime + " capturing: " + capturingTeam);
 
     }
 

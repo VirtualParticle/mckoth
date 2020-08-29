@@ -58,10 +58,8 @@ public class GamePlayerListener implements Listener {
                 if (MathUtils.insideRegion(locationTo, point.getCapturePoint().getRegion())
                         || MathUtils.insideRegion(locationFrom, point.getCapturePoint().getRegion())) {
                     if (MathUtils.insideRegion(locationTo, point.getCapturePoint().getRegion()) && !point.containsPlayer(gamePlayer)) {
-                        System.out.println("adding player");
                         point.addPlayer(gamePlayer);
                     } else if (!MathUtils.insideRegion(locationTo, point.getCapturePoint().getRegion()) && point.containsPlayer(gamePlayer)) {
-                        System.out.println("removing player");
                         point.removePlayer(gamePlayer);
                     }
                 }
