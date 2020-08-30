@@ -45,4 +45,8 @@ public class Timer implements Runnable {
         return time;
     }
 
+    public void setTime(long time) {
+        this.time = time;
+    }
+
 }
