@@ -2,15 +2,18 @@ package game.timer;
 
 import com.virtualparticle.mc.mckoth.McKoth;
 import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitScheduler;
 
 public class CountdownTimer extends Timer {
 
     private final CountdownRunnable runnable;
+    private final BukkitScheduler scheduler;
     private int task;
 
     private CountdownTimer(CountdownRunnable runnable, long seconds) {
         super(seconds + 1, 1);
         this.runnable = runnable;
+        this.scheduler = Bukkit.getScheduler();
         paused = false;
     }
 
@@ -19,12 +22,17 @@ public class CountdownTimer extends Timer {
         super.run();
         runnable.run((long) time);
         if (time == 0) {
-            Bukkit.getScheduler().cancelTask(task);
+            scheduler.cancelTask(task);
         }
     }
 
-    public void cancel() {
-        Bukkit.getScheduler().cancelTask(task);
+    public boolean cancel() {
+        if (scheduler.isCurrentlyRunning(task)) {
+            scheduler.cancelTask(task);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public static CountdownTimer createCountdownTimer(CountdownRunnable runnable, long seconds) {
