@@ -17,13 +17,15 @@ public class Map implements ConfigurationSerializable {
     private final Region region;
     private final List<CapturePoint> capturePoints;
     private final List<List<Region>> spawnRegions;
-    private final String name;
-    private final int targetScore; // default target score for map, can be changed for a game
+    private String name;
+    private int targetScore; // default target score for map, can be changed for a game
+    private int maxPlayers; // max players per team
 
-    public Map(Region region, String name, int teams, int targetScore) {
+    public Map(Region region, String name, int teams, int targetScore, int maxPlayers) {
         this.region = region;
         this.name = name;
         this.targetScore = targetScore;
+        this.maxPlayers = maxPlayers;
         capturePoints = new ArrayList<>();
         spawnRegions = new ArrayList<>();
 
@@ -65,6 +67,10 @@ public class Map implements ConfigurationSerializable {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public static Map getMapByName(String name) {
         return maps.stream().filter(map -> map.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
     }
@@ -78,10 +84,6 @@ public class Map implements ConfigurationSerializable {
         mapsInModification.put(player, map);
     }
 
-    public static Map removeMapInModification(Player player) {
-        return mapsInModification.remove(player);
-    }
-
     public static void completeMap(Player player) {
         maps.add(mapsInModification.remove(player));
     }
@@ -90,8 +92,24 @@ public class Map implements ConfigurationSerializable {
         return mapsInModification.get(player);
     }
 
+    public static Map removeMapInModification(Player player) {
+        return mapsInModification.remove(player);
+    }
+
     public int getTargetScore() {
         return targetScore;
+    }
+
+    public void setTargetScore(int targetScore) {
+        this.targetScore = targetScore;
+    }
+
+    public int getMaxPlayers() {
+        return maxPlayers;
+    }
+
+    public void setMaxPlayers(int maxPlayers) {
+        this.maxPlayers = maxPlayers;
     }
 
     @Override
@@ -103,6 +121,7 @@ public class Map implements ConfigurationSerializable {
         map.put("spawnRegions", spawnRegions);
         map.put("name", name);
         map.put("targetScore", targetScore);
+        map.put("maxPlayers", maxPlayers);
 
         return map;
 
@@ -115,6 +134,7 @@ public class Map implements ConfigurationSerializable {
         spawnRegions = (List<List<Region>>) data.get("spawnRegions");
         name = (String) data.get("name");
         targetScore = (int) data.get("targetScore");
+        maxPlayers = (int) data.get("maxPlayers");
 
     }
 

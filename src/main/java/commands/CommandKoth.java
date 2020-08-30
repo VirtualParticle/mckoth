@@ -6,6 +6,7 @@ import commands.exceptions.IncorrectUsageException;
 import commands.exceptions.PluginCommandException;
 import game.Game;
 import game.GamePlayer;
+import game.exceptions.GameJoinException;
 import map.Map;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -56,8 +57,12 @@ public class CommandKoth extends PluginCommand {
                 game.setup();
             }
 
-            GamePlayer gamePlayer = game.addPlayer(player);
-            player.sendMessage(i18n.getString("joinedTeam", gamePlayer.getTeam().getName()));
+            try {
+                GamePlayer gamePlayer = game.addPlayer(player);
+                player.sendMessage(i18n.getString("joinedTeam", gamePlayer.getTeam().getName()));
+            } catch (GameJoinException e) {
+                throw new PluginCommandException(e.getMessage());
+            }
 
             return true;
 

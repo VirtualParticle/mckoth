@@ -1,5 +1,8 @@
 package game;
 
+import I18n.I18n;
+import game.exceptions.GameJoinException;
+import game.timer.CountdownTimer;
 import map.capturePoint.ActiveCapturePoint;
 import map.Map;
 import com.virtualparticle.mc.mckoth.McKoth;
@@ -27,10 +30,13 @@ public class Game {
     private final List<Team> teams;
     private final List<ActiveCapturePoint> activeCapturePoints;
     private final McKoth plugin;
+    private final I18n i18n = I18n.getInstance();
     private final int targetScore;
     private boolean active = false;
     private boolean frozen;
     private boolean started;
+
+    private CountdownTimer startTimer;
 
     protected Game(Map map, int id) {
         this(map, id, map.getTargetScore());
@@ -55,7 +61,7 @@ public class Game {
 
     }
 
-    public GamePlayer addPlayer(Player player) {
+    public GamePlayer addPlayer(Player player) throws GameJoinException {
 
         Team smallestTeam = teams.get(0); // assuming teams.size() > 0
         for (Team team : teams) {
@@ -63,6 +69,11 @@ public class Game {
                 smallestTeam = team;
             }
         }
+
+        if (smallestTeam.getPlayers().size() >= map.getMaxPlayers()) {
+            throw new GameJoinException(i18n.getString("gameIsFull"));
+        }
+
         GamePlayer gamePlayer = new GamePlayer(player, smallestTeam);
         smallestTeam.addPlayer(gamePlayer);
 
@@ -120,22 +131,34 @@ public class Game {
         });
 
         Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < activeCapturePoints.size(); i++) {
-                sb.append(activeCapturePoints.get(i).getProgressBar());
-                if (i < activeCapturePoints.size() - 1) {
-                    sb.append("    ");
+            if (started) {
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < activeCapturePoints.size(); i++) {
+                    sb.append(activeCapturePoints.get(i).getProgressBar());
+                    if (i < activeCapturePoints.size() - 1) {
+                        sb.append("    ");
+                    }
                 }
+                String actionBar = sb.toString();
+                teams.forEach(team -> team.getPlayers().forEach(player -> ChatUtils.sendActionBar(player.getPlayer(), actionBar)));
             }
-            String actionBar = sb.toString();
-            teams.forEach(team -> team.getPlayers().forEach(player -> ChatUtils.sendActionBar(player.getPlayer(), actionBar)));
         }, 0, 5);
+
+        startTimer = CountdownTimer.createCountdownTimer(time -> {
+
+            if (time > 0) {
+                teams.forEach(team -> team.getPlayers().forEach(player -> {
+                    ChatUtils.sendActionBar(player.getPlayer(), i18n.getString("gameStartTime", String.valueOf(time)));
+                }));
+            } else {
+                startRound();
+            }
+
+        }, 120);
 
     }
 
     public void startRound() {
-
-        int spawnFreezeTime = 5 * 20;
 
         teams.forEach(team -> {
             team.enableTimer();
@@ -143,16 +166,23 @@ public class Game {
         });
 
         frozen = true; // make to wait until the players are moved to spawn to freeze
+        CountdownTimer.createCountdownTimer(time -> {
 
-        Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-            frozen = false;
-            started = true;
-            activeCapturePoints.forEach(point -> {
-                Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-                    point.setPaused(false); // point is locked for the first few seconds
-                }, 20 * 15);
-            });
-        }, spawnFreezeTime);
+            if (time > 0) {
+                teams.forEach(team -> team.getPlayers().forEach(player -> {
+                    ChatUtils.sendActionBar(player.getPlayer(), i18n.getString("roundStartTime", String.valueOf(time)));
+                }));
+            } else {
+                frozen = false;
+                started = true;
+                activeCapturePoints.forEach(point -> {
+                    Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                        point.setPaused(false); // point is locked for the first few seconds
+                    }, 20 * 15);
+                });
+            }
+
+        }, 10);
 
     }
 

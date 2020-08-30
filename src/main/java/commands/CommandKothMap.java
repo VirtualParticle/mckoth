@@ -88,8 +88,8 @@ public class CommandKothMap extends PluginCommand {
                 throw new PluginCommandException(i18n.getString("invalidWorldEditSelection"));
             }
 
-            // TODO: allow for variation in target score
-            Map map = new Map(region, name, teamCount, 2);
+            // TODO: allow for variation in target score and max players
+            Map map = new Map(region, name, teamCount, 2, 12);
             Map.startModifyingMap(map, p);
             p.sendMessage(i18n.getString("startCreatingMap", map.getName()));
 
