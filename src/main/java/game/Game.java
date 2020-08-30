@@ -76,8 +76,11 @@ public class Game {
 
         GamePlayer gamePlayer = new GamePlayer(player, smallestTeam);
         smallestTeam.addPlayer(gamePlayer);
-
         gamePlayer.respawn();
+
+        if (smallestTeam.getPlayers().size() > map.getMaxPlayers() / 2 && startTimer.getTime() > 30) {
+            startTimer.setTime(30);
+        }
 
         return gamePlayer;
     }
