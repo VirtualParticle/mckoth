@@ -133,6 +133,7 @@ public class Game {
             }, 0, 20);
         });
 
+        // TODO: change this to work with more than two teams
         Team blu = teams.get(0);
         Team red = teams.get(1);
         Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
@@ -199,6 +200,8 @@ public class Game {
     }
 
     public void endRound(Team winningTeam) {
+
+        started = false;
 
         teams.forEach(team -> team.getTimer().reset());
         activeCapturePoints.forEach(point -> {
