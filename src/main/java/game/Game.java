@@ -174,7 +174,7 @@ public class Game {
             team.getPlayers().forEach(GamePlayer::respawn);
         });
 
-        frozen = true; // make to wait until the players are moved to spawn to freeze
+        frozen = true; // make sure to wait until the players are moved to spawn to freeze
         CountdownTimer.createCountdownTimer(time -> {
 
             if (time > 0) {
