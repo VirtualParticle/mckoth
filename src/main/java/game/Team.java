@@ -4,10 +4,7 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.regions.Region;
 import com.virtualparticle.mc.mckoth.McKoth;
 import game.timer.Timer;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -23,6 +20,7 @@ public class Team {
     private final Material identifier;
     private final ChatColor color;
     private final ChatColor capColor; // color shown on cap meter when point is captured, usually darker version of color
+    private final org.bukkit.scoreboard.Team scoreboardTeam;
     private final List<Region> spawnRegions;
     private int timerTask;
     private int points = 0;
@@ -37,6 +35,14 @@ public class Team {
         this.capColor = capColor;
         players = new ArrayList<>();
         plugin = McKoth.getPlugin();
+        // TODO: maybe use a per-game scoreboard
+        scoreboardTeam = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam(
+                this.toString().replaceFirst("^[^@]*@", ""));
+        scoreboardTeam.setDisplayName(name);
+        scoreboardTeam.setColor(color);
+        scoreboardTeam.setAllowFriendlyFire(false);
+        scoreboardTeam.setCanSeeFriendlyInvisibles(true);
+        scoreboardTeam.setOption(org.bukkit.scoreboard.Team.Option.NAME_TAG_VISIBILITY, org.bukkit.scoreboard.Team.OptionStatus.NEVER);
     }
 
     public Team(String name, long captime, List<Region> spawnRegions, ChatColor color, ChatColor capColor) {
@@ -108,6 +114,7 @@ public class Team {
 
     public void addPlayer(GamePlayer player) {
         players.add(player);
+        scoreboardTeam.addEntry(player.getPlayer().getName());
     }
 
     public String getName() {
@@ -115,6 +122,7 @@ public class Team {
     }
 
     public GamePlayer remove(Player player) {
+        scoreboardTeam.removeEntry(player.getName());
         return players.stream().filter(p -> p.getPlayer() == player).findFirst().orElse(null);
     }
 
