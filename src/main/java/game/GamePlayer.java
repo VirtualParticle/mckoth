@@ -142,12 +142,13 @@ public class GamePlayer {
 
             CountdownTimer.createCountdownTimer(time -> {
 
+                long t = time - 1;
                 String message;
-                if (time > 1) {
-                    message = i18n.getString("respawnTimePlural", String.valueOf(time));
-                } else if (time == 1) {
-                    message = i18n.getString("respawnTimeSingular", String.valueOf(time));
-                } else if (time == 0) {
+                if (t > 1) {
+                    message = i18n.getString("respawnTimePlural", String.valueOf(t));
+                } else if (t == 1) {
+                    message = i18n.getString("respawnTimeSingular", String.valueOf(t));
+                } else if (t == 0) {
                     message = i18n.getString("prepareToRespawn");
                 } else {
                     message = "";
@@ -156,7 +157,7 @@ public class GamePlayer {
 
                 player.sendTitle("", message, 0, 25, 0);
 
-            }, (long) team.getRespawnTime());
+            }, (long) team.getRespawnTime() + 1);
 
         }, (int) (killCamLength));
 

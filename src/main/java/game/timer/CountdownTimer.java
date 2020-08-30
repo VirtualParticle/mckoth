@@ -9,7 +9,7 @@ public class CountdownTimer extends Timer {
     private int task;
 
     private CountdownTimer(CountdownRunnable runnable, long seconds) {
-        super(seconds, 1);
+        super(seconds + 1, 1);
         this.runnable = runnable;
         paused = false;
     }
@@ -25,7 +25,7 @@ public class CountdownTimer extends Timer {
 
     public static int createCountdownTimer(CountdownRunnable runnable, long seconds) {
         CountdownTimer timer =  new CountdownTimer(runnable, seconds);
-        return timer.task = Bukkit.getScheduler().scheduleSyncDelayedTask(McKoth.getPlugin(), timer);
+        return timer.task = Bukkit.getScheduler().scheduleSyncRepeatingTask(McKoth.getPlugin(), timer, 0, 20);
     }
 
 }
