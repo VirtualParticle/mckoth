@@ -11,6 +11,7 @@ public class CountdownTimer extends Timer {
     private CountdownTimer(CountdownRunnable runnable, long seconds) {
         super(seconds, 1);
         this.runnable = runnable;
+        paused = false;
     }
 
     @Override
