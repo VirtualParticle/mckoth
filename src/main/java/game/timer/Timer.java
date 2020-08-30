@@ -45,6 +45,16 @@ public class Timer implements Runnable {
         return time;
     }
 
+    public String getTimeString() {
+        int minutes = (int) time / 60;
+        int seconds = (int) time % 60;
+        String s = minutes + ":";
+        if (seconds < 10) {
+            s += "0";
+        }
+        return s + seconds;
+    }
+
     public void setTime(long time) {
         this.time = time;
     }
