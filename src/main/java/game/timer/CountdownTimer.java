@@ -26,13 +26,8 @@ public class CountdownTimer extends Timer {
         }
     }
 
-    public boolean cancel() {
-        if (scheduler.isCurrentlyRunning(task)) {
-            scheduler.cancelTask(task);
-            return true;
-        } else {
-            return false;
-        }
+    public void cancel() {
+        scheduler.cancelTask(task);
     }
 
     public static CountdownTimer createCountdownTimer(CountdownRunnable runnable, long seconds) {
