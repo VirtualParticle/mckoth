@@ -65,6 +65,10 @@ public class Team {
         return timer;
     }
 
+    public int getPoints() {
+        return points;
+    }
+
     public int incrementPoints() {
         return incrementPoints(1);
     }
