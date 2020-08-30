@@ -53,9 +53,6 @@ public class CaptureTimer extends Timer {
 
         super.run();
 
-        Objective objective = Bukkit.getServer().getScoreboardManager().getMainScoreboard().getObjective("score");
-        objective.getScore("Capture Point " + capturePoint.getName()).setScore((int) time);
-
         if (teamWithCaptime == null && capturingTeam != null && interval != 0) {
             teamWithCaptime = capturingTeam;
         }

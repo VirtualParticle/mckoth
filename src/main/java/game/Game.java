@@ -121,17 +121,6 @@ public class Game {
     public void setup() {
 
         active = true; // TODO: maybe move to follow warmup, maybe not
-        Scoreboard scoreboard = Bukkit.getServer().getScoreboardManager().getMainScoreboard();
-        scoreboard.getObjectives().forEach(Objective::unregister); // TODO: move this somewhere else
-        Objective objective = scoreboard.registerNewObjective("score", "dummy", "Score");
-        objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-
-        teams.forEach(team -> {
-            Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
-                Score score = objective.getScore(team.getName());
-                score.setScore((int) team.getTimer().getTime());
-            }, 0, 20);
-        });
 
         // TODO: change this to work with more than two teams
         Team blu = teams.get(0);
@@ -202,14 +191,29 @@ public class Game {
     public void endRound(Team winningTeam) {
 
         started = false;
+        int score = winningTeam.incrementPoints();
 
-        teams.forEach(team -> team.getTimer().reset());
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < teams.size(); i++) {
+            Team team = teams.get(i);
+            team.getTimer().reset();
+            sb.append(team.getColor());
+            sb.append(team.getName()).append(": ");
+            sb.append(team.getPoints());
+            if (i < teams.size() - 1) {
+                sb.append("   ");
+            }
+        }
+
+        String msg = sb.toString();
+        teams.forEach(team -> team.getPlayers().forEach(player -> player.getPlayer().sendTitle("", msg, 5, 20 * 10, 5)));
+
         activeCapturePoints.forEach(point -> {
             point.setPaused(true);
             point.reset();
         });
 
-        if (winningTeam.incrementPoints() >= targetScore) {
+        if (score >= targetScore) {
             endGame(winningTeam);
         }
 
