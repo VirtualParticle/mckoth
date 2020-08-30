@@ -133,15 +133,19 @@ public class Game {
             }, 0, 20);
         });
 
+        Team blu = teams.get(0);
+        Team red = teams.get(1);
         Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
             if (started) {
                 StringBuilder sb = new StringBuilder();
+                sb.append(blu.getColor() + (ChatColor.BOLD + blu.getTimer().getTimeString() + "    "));
                 for (int i = 0; i < activeCapturePoints.size(); i++) {
                     sb.append(activeCapturePoints.get(i).getProgressBar());
                     if (i < activeCapturePoints.size() - 1) {
                         sb.append("    ");
                     }
                 }
+                sb.append(red.getColor() + ("    " + ChatColor.BOLD + red.getTimer().getTimeString()));
                 String actionBar = sb.toString();
                 teams.forEach(team -> team.getPlayers().forEach(player -> ChatUtils.sendActionBar(player.getPlayer(), actionBar)));
             }
@@ -182,6 +186,9 @@ public class Game {
                 started = true;
                 activeCapturePoints.forEach(point -> {
                     Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
+                        teams.forEach(team -> team.getPlayers().forEach(player -> {
+                            player.getPlayer().sendTitle("", i18n.getString("pointIsAvailable"), 5, 20 * 3, 5);
+                        }));
                         point.setPaused(false); // point is locked for the first few seconds
                     }, 20 * 15);
                 });
