@@ -2,6 +2,7 @@ package game;
 
 import I18n.I18n;
 import com.virtualparticle.mc.mckoth.McKoth;
+import game.timer.CountdownTimer;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -139,15 +140,14 @@ public class GamePlayer {
                 spectate(target);
             }
 
-            AtomicInteger time = new AtomicInteger((int) team.getRespawnTime());
-            respawnTask = scheduler.scheduleSyncRepeatingTask(plugin, () -> {
+            CountdownTimer.createCountdownTimer(time -> {
 
                 String message;
-                if (time.get() > 1) {
-                    message = i18n.getString("respawnTimePlural", String.valueOf(time.get()));
-                } else if (time.get() == 1) {
-                    message = i18n.getString("respawnTimeSingular", String.valueOf(time.get()));
-                } else if (time.get() == 0) {
+                if (time > 1) {
+                    message = i18n.getString("respawnTimePlural", String.valueOf(time));
+                } else if (time == 1) {
+                    message = i18n.getString("respawnTimeSingular", String.valueOf(time));
+                } else if (time == 0) {
                     message = i18n.getString("prepareToRespawn");
                 } else {
                     message = "";
@@ -155,9 +155,8 @@ public class GamePlayer {
                 }
 
                 player.sendTitle("", message, 0, 25, 0);
-                time.decrementAndGet();
 
-            }, 0, 20);
+            }, (long) team.getRespawnTime());
 
         }, (int) (killCamLength));
 
