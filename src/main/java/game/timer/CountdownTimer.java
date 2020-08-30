@@ -14,12 +14,6 @@ public class CountdownTimer extends Timer {
         paused = false;
     }
 
-    public static CountdownTimer createCountdownTimer(CountdownRunnable runnable, long seconds) {
-        CountdownTimer timer = new CountdownTimer(runnable, seconds);
-        timer.task = Bukkit.getScheduler().scheduleSyncRepeatingTask(McKoth.getPlugin(), timer, 0, 20);
-        return timer;
-    }
-
     @Override
     public void run() {
         super.run();
@@ -27,6 +21,16 @@ public class CountdownTimer extends Timer {
         if (time == 0) {
             Bukkit.getScheduler().cancelTask(task);
         }
+    }
+
+    public void cancel() {
+        Bukkit.getScheduler().cancelTask(task);
+    }
+
+    public static CountdownTimer createCountdownTimer(CountdownRunnable runnable, long seconds) {
+        CountdownTimer timer = new CountdownTimer(runnable, seconds);
+        timer.task = Bukkit.getScheduler().scheduleSyncRepeatingTask(McKoth.getPlugin(), timer, 0, 20);
+        return timer;
     }
 
 }
