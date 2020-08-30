@@ -27,6 +27,7 @@ public class GamePlayer {
     private final I18n i18n = I18n.getInstance();
 
     private int respawnTask;
+    private boolean dead;
 
     public GamePlayer(Player player) {
         this(player, null);
@@ -120,6 +121,7 @@ public class GamePlayer {
 
         // TODO: remove player from regions on die just in case they aren't removed by spectate
 
+        dead = true;
         regenHealth();
         spectate(player.getLocation());
 
@@ -165,6 +167,7 @@ public class GamePlayer {
 
     public void respawn() {
 
+        dead = false;
         Bukkit.getScheduler().cancelTask(respawnTask);
         stopSpectating();
         regenHealth();
@@ -174,6 +177,10 @@ public class GamePlayer {
             player.teleport(team.createRespawnLocation());
         }
 
+    }
+
+    public boolean isDead() {
+        return dead;
     }
 
 }

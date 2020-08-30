@@ -191,7 +191,18 @@ public class Game {
     public void endRound(Team winningTeam) {
 
         started = false;
+
+        activeCapturePoints.forEach(point -> {
+            point.setPaused(true);
+            point.reset();
+        });
+
         int score = winningTeam.incrementPoints();
+        String title = "";
+        if (score >= targetScore) {
+            title = i18n.getString("wins", winningTeam.getName());
+            endGame(winningTeam);
+        }
 
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < teams.size(); i++) {
@@ -206,20 +217,12 @@ public class Game {
         }
 
         String msg = sb.toString();
-        teams.forEach(team -> team.getPlayers().forEach(player -> player.getPlayer().sendTitle("", msg, 5, 20 * 10, 5)));
-
-        activeCapturePoints.forEach(point -> {
-            point.setPaused(true);
-            point.reset();
-        });
-
-        if (score >= targetScore) {
-            endGame(winningTeam);
-        }
+        String finalTitle = title;
+        teams.forEach(team -> team.getPlayers().forEach(player -> player.getPlayer().sendTitle(finalTitle, msg, 5, 20 * 10, 5)));
 
         // endgame
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-
+            endGame(winningTeam);
         }, 15 * 20);
 
     }
