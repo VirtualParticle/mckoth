@@ -1,9 +1,12 @@
 package game.listeners;
 
+import I18n.I18n;
+import game.Team;
 import map.capturePoint.ActiveCapturePoint;
 import map.Map;
 import game.Game;
 import game.GamePlayer;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -11,11 +14,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import utils.MathUtils;
 
 public class GamePlayerListener implements Listener {
+
+    private static final I18n i18n = I18n.getInstance();
 
     private final Game game;
 
@@ -136,4 +142,21 @@ public class GamePlayerListener implements Listener {
 
     }
 
+    @EventHandler
+    public void onAsyncPlayerChat(AsyncPlayerChatEvent event) {
+
+        Player player = event.getPlayer();
+        GamePlayer gamePlayer = game.getGamePlayer(player);
+        if (gamePlayer == null) {
+            return;
+        }
+
+        Team team = gamePlayer.getTeam();
+        // TODO: consider escaping characters in the name
+        event.setFormat(event.getFormat()
+                .replaceFirst("<", (gamePlayer.isDead() ? i18n.getString("dead") + " " : "") + team.getColor().toString())
+                .replaceFirst(">", ChatColor.RESET + ":")
+        );
+
+    }
 }
