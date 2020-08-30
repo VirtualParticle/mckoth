@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
 import utils.MathUtils;
@@ -111,6 +112,26 @@ public class GamePlayerListener implements Listener {
 
         } else if (event.getCause() == PlayerTeleportEvent.TeleportCause.PLUGIN) {
             onPlayerMove(event); // move event doesn't seem to be called automatically on plugin teleport
+        }
+
+    }
+
+    @EventHandler
+    public void onEntityRegainHealth(EntityRegainHealthEvent event) {
+
+        if (!(event.getEntity() instanceof Player)) {
+            return;
+        }
+
+        Player player = (Player) event.getEntity();
+        GamePlayer gamePlayer = game.getGamePlayer(player);
+        if (gamePlayer == null) {
+            return;
+        }
+
+        EntityRegainHealthEvent.RegainReason reason = event.getRegainReason();
+        if (reason == EntityRegainHealthEvent.RegainReason.SATIATED || reason == EntityRegainHealthEvent.RegainReason.REGEN) {
+            event.setCancelled(true);
         }
 
     }
