@@ -163,6 +163,8 @@ public class Game {
 
     public void startRound() {
 
+        startTimer.cancel();
+
         teams.forEach(team -> {
             team.enableTimer();
             team.getPlayers().forEach(GamePlayer::respawn);
