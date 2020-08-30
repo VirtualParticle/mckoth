@@ -189,8 +189,8 @@ public class Game {
                         teams.forEach(team -> team.getPlayers().forEach(player -> {
                             player.getPlayer().sendTitle("", i18n.getString("pointIsAvailable"), 5, 20 * 3, 5);
                         }));
-                        point.setPaused(false); // point is locked for the first few seconds
-                    }, 20 * 15);
+                        point.setPaused(false);
+                    }, 20 * 15); // point is locked for the first 15 seconds
                 });
             }
 
