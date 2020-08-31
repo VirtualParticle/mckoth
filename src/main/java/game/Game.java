@@ -245,6 +245,7 @@ public class Game {
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
             if (score >= targetScore) {
                 endGame(winningTeam);
+                plugin.getGameManager().getGames().remove(this);
             } else {
                 startRound();
             }
@@ -267,7 +268,6 @@ public class Game {
             capturePoint.disableTimer();
             capturePoint.reset();
         });
-        plugin.getGameManager().getGames().remove(this);
     }
 
     public boolean isActive() {

@@ -20,6 +20,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -84,8 +85,6 @@ public final class McKoth extends JavaPlugin {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
 
     }
 
