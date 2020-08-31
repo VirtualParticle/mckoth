@@ -28,13 +28,13 @@ public class Team {
     private int points = 0;
     private float respawnTime = 10;
 
-    public Team(String name, long captime, List<Region> spawnRegions, Game game, Material identifier, ChatColor color, ChatColor capColor) {
+    public Team(String name, long captime, List<Region> spawnRegions, Game game, TeamColor teamColor) {
         this.name = name;
         this.spawnRegions = spawnRegions;
         this.game = game;
-        this.identifier = identifier;
-        this.color = color;
-        this.capColor = capColor;
+        this.identifier = teamColor.getMaterial();
+        this.color = teamColor.getColor1();
+        this.capColor = teamColor.getColor2();
         players = new ArrayList<>();
         plugin = McKoth.getPlugin();
         // TODO: maybe use a per-game scoreboard
@@ -46,10 +46,6 @@ public class Team {
         scoreboardTeam.setCanSeeFriendlyInvisibles(true);
         scoreboardTeam.setOption(org.bukkit.scoreboard.Team.Option.NAME_TAG_VISIBILITY, org.bukkit.scoreboard.Team.OptionStatus.NEVER);
         this.timer = new TeamTimer(this, captime);
-    }
-
-    public Team(String name, long captime, List<Region> spawnRegions, Game game, ChatColor color, ChatColor capColor) {
-        this(name, captime, spawnRegions, game, Material.AIR, color, capColor);
     }
 
     public List<GamePlayer> getPlayers() {

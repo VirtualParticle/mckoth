@@ -58,8 +58,8 @@ public class Game {
         plugin.getServer().getPluginManager().registerEvents(new TimerListener(this), plugin);
 
         // TODO: this can be changed to allow more than two teams
-        teams.add(new Team("BLU", CAPTIME, map.getSpawnRegions().get(0), this, Material.BLUE_WOOL, ChatColor.BLUE, ChatColor.DARK_BLUE));
-        teams.add(new Team("RED", CAPTIME, map.getSpawnRegions().get(1), this, Material.RED_WOOL, ChatColor.RED, ChatColor.DARK_RED));
+        teams.add(new Team("BLU", CAPTIME, map.getSpawnRegions().get(0), this, TeamColor.BLUE));
+        teams.add(new Team("RED", CAPTIME, map.getSpawnRegions().get(1), this, TeamColor.RED));
 
     }
 
