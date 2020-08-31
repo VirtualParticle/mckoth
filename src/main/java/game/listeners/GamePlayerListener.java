@@ -167,7 +167,7 @@ public class GamePlayerListener implements Listener {
 
             event.setCancelled(true);
 
-        } else {
+        } else if (event.getCause() == PlayerTeleportEvent.TeleportCause.PLUGIN) {
             onPlayerMove(event); // move event doesn't seem to be called automatically on plugin teleport
         }
 
