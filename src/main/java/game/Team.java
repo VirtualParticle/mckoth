@@ -19,9 +19,7 @@ public class Team {
     private final Game game;
     private final List<GamePlayer> players;
     private final TeamTimer timer;
-    private final Material identifier;
-    private final ChatColor color;
-    private final ChatColor capColor; // color shown on cap meter when point is captured, usually darker version of color
+    private final TeamColor color;
     private final org.bukkit.scoreboard.Team scoreboardTeam;
     private final List<Region> spawnRegions;
     private int timerTask;
@@ -32,16 +30,14 @@ public class Team {
         this.name = name;
         this.spawnRegions = spawnRegions;
         this.game = game;
-        this.identifier = teamColor.getMaterial();
-        this.color = teamColor.getColor1();
-        this.capColor = teamColor.getColor2();
+        this.color = teamColor;
         players = new ArrayList<>();
         plugin = McKoth.getPlugin();
         // TODO: maybe use a per-game scoreboard
         scoreboardTeam = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam(
                 this.toString().replaceFirst("^[^@]*@", ""));
         scoreboardTeam.setDisplayName(name);
-        scoreboardTeam.setColor(color);
+        scoreboardTeam.setColor(color.getColor1());
         scoreboardTeam.setAllowFriendlyFire(false);
         scoreboardTeam.setCanSeeFriendlyInvisibles(true);
         scoreboardTeam.setOption(org.bukkit.scoreboard.Team.Option.NAME_TAG_VISIBILITY, org.bukkit.scoreboard.Team.OptionStatus.NEVER);
@@ -74,11 +70,6 @@ public class Team {
 
     public int incrementPoints(int val) {
         return points += val;
-    }
-
-
-    public Material getIdentifier() {
-        return identifier;
     }
 
     public List<Region> getSpawnRegions() {
@@ -133,12 +124,8 @@ public class Team {
         return players.stream().anyMatch(gp -> gp.getPlayer() == player);
     }
 
-    public ChatColor getColor() {
+    public TeamColor getColor() {
         return color;
-    }
-
-    public ChatColor getCapColor() {
-        return capColor;
     }
 
     public Game getGame() {
