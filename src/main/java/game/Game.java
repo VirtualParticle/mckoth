@@ -21,6 +21,7 @@ import org.bukkit.scoreboard.Scoreboard;
 import utils.ChatUtils;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class Game {
@@ -256,10 +257,11 @@ public class Game {
         started = false;
         teams.forEach(team -> {
             team.disableTimer();
-            team.getPlayers().forEach(player -> {
-                player.getPlayer().setGameMode(GameMode.SPECTATOR);
-                team.remove(player.getPlayer());
-            });
+            Iterator<GamePlayer> iter = team.getPlayers().iterator();
+            while (iter.hasNext()) {
+                iter.next().getPlayer().setGameMode(GameMode.SPECTATOR);
+                iter.remove();
+            }
         });
         activeCapturePoints.forEach(capturePoint -> {
             capturePoint.disableTimer();
