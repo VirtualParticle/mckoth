@@ -143,11 +143,13 @@ public class GamePlayerListener implements Listener {
             event.setCancelled(true);
         } else {
             if (entityDamager instanceof Firework) {
+                // rocket jump
                 Location fireworkLocation = entityDamager.getLocation();
                 Location playerLocation = p.getLocation();
                 Vector vector = playerLocation.subtract(fireworkLocation).toVector();
                 double distance = vector.lengthSquared();
-                double power = distance != 0 ? Math.min(5, 75 / distance) : 5; // max power is 5
+                double maxPower = 5;
+                double power = distance != 0 ? Math.min(maxPower, 5 / distance) : maxPower;
                 p.setVelocity(p.getVelocity().add(vector.multiply(power)));
             }
         }
