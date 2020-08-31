@@ -3,13 +3,18 @@ package game;
 import I18n.I18n;
 import com.virtualparticle.mc.mckoth.McKoth;
 import game.timer.CountdownTimer;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
+import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.FireworkMeta;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.scheduler.BukkitScheduler;
 import utils.ChatUtils;
 
@@ -117,6 +122,51 @@ public class GamePlayer {
         return spectating;
     }
 
+    public void equip() {
+
+        Color armorColor = team.getColor().getArmorColor();
+        ItemStack helmet = new ItemStack(Material.LEATHER_HELMET);
+        ItemStack chestplate = new ItemStack(Material.LEATHER_CHESTPLATE);
+        ItemStack leggings = new ItemStack(Material.LEATHER_LEGGINGS);
+        ItemStack boots = new ItemStack(Material.LEATHER_BOOTS);
+
+        LeatherArmorMeta meta = (LeatherArmorMeta) helmet.getItemMeta();
+        meta.setColor(armorColor);
+        helmet.setItemMeta(meta);
+        chestplate.setItemMeta(meta);
+        leggings.setItemMeta(meta);
+        boots.setItemMeta(meta);
+
+        ItemStack sword = new ItemStack(Material.IRON_SWORD);
+        ItemStack crossbow = new ItemStack(Material.CROSSBOW);
+        ItemStack fireworks = new ItemStack(Material.FIREWORK_ROCKET, 64);
+
+        ItemMeta crossbowItemMeta = crossbow.getItemMeta();
+        crossbowItemMeta.addEnchant(Enchantment.QUICK_CHARGE, 4, true);
+        crossbowItemMeta.setUnbreakable(true);
+        crossbow.setItemMeta(crossbowItemMeta);
+
+        FireworkMeta fireworksMeta = (FireworkMeta) fireworks.getItemMeta();
+        fireworksMeta.setPower(5);
+        fireworks.setItemMeta(fireworksMeta);
+
+        EntityEquipment equipment = player.getEquipment();
+        PlayerInventory inventory = player.getInventory();
+
+        inventory.clear();
+
+        equipment.setHelmet(helmet);
+        equipment.setChestplate(chestplate);
+        equipment.setLeggings(leggings);
+        equipment.setBoots(boots);
+
+        inventory.setItem(0, sword);
+        inventory.setItem(1, crossbow);
+        inventory.setItem(40, fireworks);
+
+
+    }
+
     public void die() {
 
         // TODO: remove player from regions on die just in case they aren't removed by spectate
@@ -176,6 +226,8 @@ public class GamePlayer {
         if (respawnLocation != null) {
             player.teleport(team.createRespawnLocation());
         }
+
+        equip();
 
     }
 
