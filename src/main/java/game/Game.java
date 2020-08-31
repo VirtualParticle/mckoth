@@ -2,6 +2,7 @@ package game;
 
 import I18n.I18n;
 import game.exceptions.GameJoinException;
+import game.listeners.TimerListener;
 import game.timer.CountdownTimer;
 import map.capturePoint.ActiveCapturePoint;
 import map.Map;
@@ -23,7 +24,7 @@ import java.util.List;
 
 public class Game {
 
-    public static final long CAPTIME = 60 * 3; // three minutes
+    public static final long CAPTIME = 3; //60 * 3; // three minutes
 
     private final Map map;
     private final int id;
@@ -54,10 +55,11 @@ public class Game {
 
         plugin.getServer().getPluginManager().registerEvents(new CapturePointListener(this), plugin);
         plugin.getServer().getPluginManager().registerEvents(new GamePlayerListener(this), plugin);
+        plugin.getServer().getPluginManager().registerEvents(new TimerListener(this), plugin);
 
         // TODO: this can be changed to allow more than two teams
-        teams.add(new Team("BLU", CAPTIME, map.getSpawnRegions().get(0), Material.BLUE_WOOL, ChatColor.BLUE, ChatColor.DARK_BLUE));
-        teams.add(new Team("RED", CAPTIME, map.getSpawnRegions().get(1), Material.RED_WOOL, ChatColor.RED, ChatColor.DARK_RED));
+        teams.add(new Team("BLU", CAPTIME, map.getSpawnRegions().get(0), this, Material.BLUE_WOOL, ChatColor.BLUE, ChatColor.DARK_BLUE));
+        teams.add(new Team("RED", CAPTIME, map.getSpawnRegions().get(1), this, Material.RED_WOOL, ChatColor.RED, ChatColor.DARK_RED));
 
     }
 
@@ -127,6 +129,7 @@ public class Game {
         Team red = teams.get(1);
         Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, () -> {
             if (started) {
+
                 StringBuilder sb = new StringBuilder();
                 sb.append(blu.getColor() + (ChatColor.BOLD + blu.getTimer().getTimeString() + "    "));
                 for (int i = 0; i < activeCapturePoints.size(); i++) {
@@ -159,8 +162,15 @@ public class Game {
 
         startTimer.cancel();
 
+        activeCapturePoints.forEach(point -> {
+            point.setPaused(true);
+            point.reset();
+        });
+
         teams.forEach(team -> {
             team.enableTimer();
+            team.getTimer().setPaused(true);
+            team.getTimer().reset();
             team.getPlayers().forEach(GamePlayer::respawn);
         });
 
@@ -197,11 +207,16 @@ public class Game {
             point.reset();
         });
 
+        teams.forEach(team -> {
+            team.disableTimer();
+            team.getTimer().setPaused(true);
+            team.getTimer().reset();
+        });
+
         int score = winningTeam.incrementPoints();
         String title = "";
         if (score >= targetScore) {
-            title = i18n.getString("wins", winningTeam.getName());
-            endGame(winningTeam);
+            title = winningTeam.getColor() + i18n.getString("wins", winningTeam.getName());
         }
 
         StringBuilder sb = new StringBuilder();
@@ -218,11 +233,15 @@ public class Game {
 
         String msg = sb.toString();
         String finalTitle = title;
-        teams.forEach(team -> team.getPlayers().forEach(player -> player.getPlayer().sendTitle(finalTitle, msg, 5, 20 * 10, 5)));
+        teams.forEach(team -> team.getPlayers().forEach(player -> player.getPlayer().sendTitle(finalTitle, msg, 5, 20 * 13, 5)));
 
         // endgame
         Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, () -> {
-            endGame(winningTeam);
+            if (score >= targetScore) {
+                endGame(winningTeam);
+            } else {
+                startRound();
+            }
         }, 15 * 20);
 
     }

@@ -3,6 +3,7 @@ package map.capturePoint;
 import com.virtualparticle.mc.mckoth.McKoth;
 import game.Game;
 import game.GamePlayer;
+import game.Team;
 import game.timer.CaptureTimer;
 import org.bukkit.scheduler.BukkitScheduler;
 import utils.MathUtils;
@@ -101,4 +102,7 @@ public class ActiveCapturePoint {
         scheduler.cancelTask(timerTask);
     }
 
+    public Team getControllingTeam() {
+        return timer.getControllingTeam();
+    }
 }

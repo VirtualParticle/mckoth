@@ -1,12 +1,12 @@
 package game.listeners;
 
+import game.timer.CaptureTimer;
 import map.capturePoint.ActiveCapturePoint;
 import map.events.PointCaptureEvent;
 import game.Game;
 import game.Team;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import utils.ChatUtils;
 
 public class CapturePointListener implements Listener {
 
@@ -27,7 +27,8 @@ public class CapturePointListener implements Listener {
         Team capturingTeam = e.getCapturingTeam();
         ActiveCapturePoint capturePoint = e.getCapturePoint();
         if (capturingTeam.getTimer().getTime() <= 0) {
-            game.endRound(capturingTeam);
+            // this is when a team recaptures after losing the point in overtime
+//            game.endRound(capturingTeam);
         }
 
     }

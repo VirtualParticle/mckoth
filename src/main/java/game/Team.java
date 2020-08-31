@@ -3,6 +3,7 @@ package game;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.regions.Region;
 import com.virtualparticle.mc.mckoth.McKoth;
+import game.timer.TeamTimer;
 import game.timer.Timer;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -15,8 +16,9 @@ public class Team {
 
     private final McKoth plugin;
     private final String name;
+    private final Game game;
     private final List<GamePlayer> players;
-    private final Timer timer;
+    private final TeamTimer timer;
     private final Material identifier;
     private final ChatColor color;
     private final ChatColor capColor; // color shown on cap meter when point is captured, usually darker version of color
@@ -26,10 +28,10 @@ public class Team {
     private int points = 0;
     private float respawnTime = 10;
 
-    public Team(String name, long captime, List<Region> spawnRegions, Material identifier, ChatColor color, ChatColor capColor) {
+    public Team(String name, long captime, List<Region> spawnRegions, Game game, Material identifier, ChatColor color, ChatColor capColor) {
         this.name = name;
-        this.timer = new Timer(captime);
         this.spawnRegions = spawnRegions;
+        this.game = game;
         this.identifier = identifier;
         this.color = color;
         this.capColor = capColor;
@@ -43,10 +45,11 @@ public class Team {
         scoreboardTeam.setAllowFriendlyFire(false);
         scoreboardTeam.setCanSeeFriendlyInvisibles(true);
         scoreboardTeam.setOption(org.bukkit.scoreboard.Team.Option.NAME_TAG_VISIBILITY, org.bukkit.scoreboard.Team.OptionStatus.NEVER);
+        this.timer = new TeamTimer(this, captime);
     }
 
-    public Team(String name, long captime, List<Region> spawnRegions, ChatColor color, ChatColor capColor) {
-        this(name, captime, spawnRegions, Material.AIR, color, capColor);
+    public Team(String name, long captime, List<Region> spawnRegions, Game game, ChatColor color, ChatColor capColor) {
+        this(name, captime, spawnRegions, game, Material.AIR, color, capColor);
     }
 
     public List<GamePlayer> getPlayers() {
@@ -142,4 +145,7 @@ public class Team {
         return capColor;
     }
 
+    public Game getGame() {
+        return game;
+    }
 }

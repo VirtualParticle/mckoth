@@ -1,5 +1,9 @@
 package game.timer;
 
+import com.virtualparticle.mc.mckoth.McKoth;
+import game.timer.events.TimerExpireEvent;
+import map.events.PointCaptureEvent;
+
 public class Timer implements Runnable {
 
     protected static float DEFAULT_INTERVAL = 1;
@@ -8,6 +12,7 @@ public class Timer implements Runnable {
     protected float originalTime;
     protected float time;
     protected float interval;
+    private boolean expired;
 
     public Timer(float time) {
         this(time, DEFAULT_INTERVAL);
@@ -17,6 +22,7 @@ public class Timer implements Runnable {
         this.originalTime = time;
         this.time = time;
         this.interval = interval;
+        expired = false;
     }
 
     public void setPaused(boolean paused) {
@@ -29,6 +35,7 @@ public class Timer implements Runnable {
 
     public void reset() {
         time = originalTime;
+        expired = false;
 //        setPaused(true);
     }
 
@@ -37,6 +44,9 @@ public class Timer implements Runnable {
 
         if (time > 0 && !paused) {
             time -= interval;
+        } else if (time <= 0) { //&& !expired){
+            expired = true;
+            McKoth.getPlugin().getServer().getPluginManager().callEvent(new TimerExpireEvent(this));
         }
 
     }

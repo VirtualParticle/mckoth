@@ -6,11 +6,7 @@ import map.capturePoint.ActiveCapturePoint;
 import map.events.PointCaptureEvent;
 import com.virtualparticle.mc.mckoth.McKoth;
 import game.Team;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Scoreboard;
 import utils.ChatUtils;
 import utils.MathUtils;
 
@@ -74,7 +70,8 @@ public class CaptureTimer extends Timer {
             reset();
 
         } else if (time > originalTime) {
-            // point capture time expired
+            // point capture time lost
+//            McKoth.getPlugin().getServer().getPluginManager().callEvent(new CaptimeLostEvent(this));
             teamWithCaptime = null;
             reset();
         }
@@ -132,6 +129,10 @@ public class CaptureTimer extends Timer {
 
     public Team getTeamWithCaptime() {
         return teamWithCaptime;
+    }
+
+    public Game getGame() {
+        return game;
     }
 
 }
