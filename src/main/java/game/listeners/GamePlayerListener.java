@@ -242,6 +242,11 @@ public class GamePlayerListener implements Listener {
     }
 
     @EventHandler
+    public void onPlayerKick(PlayerKickEvent event) {
+        game.removePlayer(event.getPlayer());
+    }
+
+    @EventHandler
     public void onClick(InventoryClickEvent event) {
 
         Player player = (Player) event.getWhoClicked();
