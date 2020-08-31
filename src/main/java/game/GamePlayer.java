@@ -3,9 +3,11 @@ package game;
 import I18n.I18n;
 import com.virtualparticle.mc.mckoth.McKoth;
 import game.timer.CountdownTimer;
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -131,6 +133,7 @@ public class GamePlayer {
         ItemStack boots = new ItemStack(Material.LEATHER_BOOTS);
 
         LeatherArmorMeta meta = (LeatherArmorMeta) helmet.getItemMeta();
+        meta.setUnbreakable(true);
         meta.setColor(armorColor);
         helmet.setItemMeta(meta);
         chestplate.setItemMeta(meta);
@@ -142,13 +145,21 @@ public class GamePlayer {
         ItemStack fireworks = new ItemStack(Material.FIREWORK_ROCKET, 64);
 
         ItemMeta crossbowItemMeta = crossbow.getItemMeta();
-        crossbowItemMeta.addEnchant(Enchantment.QUICK_CHARGE, 4, true);
         crossbowItemMeta.setUnbreakable(true);
+        crossbowItemMeta.addEnchant(Enchantment.QUICK_CHARGE, 2, true);
         crossbow.setItemMeta(crossbowItemMeta);
 
         FireworkMeta fireworksMeta = (FireworkMeta) fireworks.getItemMeta();
-        fireworksMeta.setPower(5);
+        fireworksMeta.setPower(7);
+        FireworkEffect.Builder fireworkBuilder = FireworkEffect.builder();
+        fireworkBuilder.withColor(team.getColor().getArmorColor());
+        fireworksMeta.addEffect(fireworkBuilder.build());
         fireworks.setItemMeta(fireworksMeta);
+
+        ItemStack wool = new ItemStack(team.getColor().getMaterial());
+        ItemMeta woolMeta = wool.getItemMeta();
+        woolMeta.setDisplayName(team.getColor().getColor1() + ChatColor.BOLD.toString() + team.getName());
+        wool.setItemMeta(woolMeta);
 
         EntityEquipment equipment = player.getEquipment();
         PlayerInventory inventory = player.getInventory();
@@ -163,26 +174,40 @@ public class GamePlayer {
         inventory.setItem(0, sword);
         inventory.setItem(1, crossbow);
         inventory.setItem(40, fireworks);
+        inventory.setItem(8, wool);
 
+        // TODO: remove when making plugin public
+        player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).setBaseValue(16);
 
     }
 
     public void die() {
 
         // TODO: remove player from regions on die just in case they aren't removed by spectate
-
         dead = true;
         regenHealth();
         spectate(player.getLocation());
 
         float killCamLength = 3 * 20;
         Player killer = player.getKiller();
-        if (killer != null) {
+        GamePlayer gpKiller = team.getGame().getGamePlayer(killer);
+        String deathMessage = team.getColor() + ChatColor.BOLD.toString() + player.getDisplayName() +
+                ChatColor.RESET + " " +i18n.getString("died");
+
+        if (killer != null && gpKiller != null && gpKiller != this) {
             player.sendTitle("", i18n.getString("killedByPlayerMessage",
                     killer.getName()), 0, (int) killCamLength + 5, 0);
+            deathMessage = team.getColor() + ChatColor.BOLD.toString() + player.getDisplayName() +
+                    ChatColor.RESET + " " +i18n.getString("killedBy") + " " +
+                    gpKiller.getTeam().getColor() + ChatColor.BOLD + killer.getDisplayName();
         } else {
             player.sendTitle("", i18n.getString("killedByEnvironment"), 0, (int) killCamLength + 5, 0);
         }
+
+        String finalDeathMessage = deathMessage;
+        team.getGame().getTeams().forEach(t -> t.getPlayers().forEach(gp -> {
+            gp.getPlayer().sendMessage(finalDeathMessage);
+        }));
 
         BukkitScheduler scheduler = plugin.getServer().getScheduler();
         scheduler.scheduleSyncDelayedTask(plugin, () -> {
@@ -234,5 +259,7 @@ public class GamePlayer {
     public boolean isDead() {
         return dead;
     }
+
+
 
 }

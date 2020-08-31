@@ -11,6 +11,7 @@ import game.listeners.CapturePointListener;
 import game.listeners.GamePlayerListener;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -24,7 +25,7 @@ import java.util.List;
 
 public class Game {
 
-    public static final long CAPTIME = 3; //60 * 3; // three minutes
+    private final long CAPTIME = 60 * 3; // three minutes
 
     private final Map map;
     private final int id;
@@ -96,6 +97,7 @@ public class Game {
         }
 
         if (gamePlayer != null) {
+            player.setGameMode(GameMode.SPECTATOR);
             GamePlayer finalGamePlayer = gamePlayer;
             activeCapturePoints.forEach(cp -> cp.removePlayer(finalGamePlayer));
             return true;
@@ -155,6 +157,8 @@ public class Game {
             }
 
         }, 120);
+
+        activeCapturePoints.forEach(ActiveCapturePoint::reset);
 
     }
 
@@ -224,6 +228,7 @@ public class Game {
             Team team = teams.get(i);
             team.getTimer().reset();
             sb.append(team.getColor());
+            sb.append(ChatColor.BOLD);
             sb.append(team.getName()).append(": ");
             sb.append(team.getPoints());
             if (i < teams.size() - 1) {
@@ -246,11 +251,21 @@ public class Game {
 
     }
 
-    private void endGame(Team winningTeam) {
+    public void endGame(Team winningTeam) {
         active = false; // TODO: this might end up being moved to endRound()
-        teams.forEach(Team::disableTimer);
-        activeCapturePoints.forEach(ActiveCapturePoint::disableTimer);
         started = false;
+        teams.forEach(team -> {
+            team.disableTimer();
+            team.getPlayers().forEach(player -> {
+                player.getPlayer().setGameMode(GameMode.SPECTATOR);
+                team.remove(player.getPlayer());
+            });
+        });
+        activeCapturePoints.forEach(capturePoint -> {
+            capturePoint.disableTimer();
+            capturePoint.reset();
+        });
+        plugin.getGameManager().getGames().remove(this);
     }
 
     public boolean isActive() {
@@ -258,10 +273,13 @@ public class Game {
     }
 
     public GamePlayer getGamePlayer(Player p) {
+        if (p == null) {
+            return null;
+        }
         GamePlayer gamePlayer = null;
         for (Team team : teams) {
             for (GamePlayer player : team.getPlayers()) {
-                if (player.getPlayer() == p) {
+                if (player.getPlayer().getUniqueId().equals(p.getUniqueId())) {
                     gamePlayer = player;
                 }
             }
@@ -280,4 +298,5 @@ public class Game {
     public boolean isStarted() {
         return started;
     }
+
 }

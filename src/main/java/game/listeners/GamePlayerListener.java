@@ -8,15 +8,17 @@ import game.Game;
 import game.GamePlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.player.*;
+import org.bukkit.projectiles.ProjectileSource;
+import org.bukkit.util.Vector;
 import utils.MathUtils;
 
 public class GamePlayerListener implements Listener {
@@ -95,10 +97,59 @@ public class GamePlayerListener implements Listener {
             return;
         }
 
+        if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
+            event.setDamage(event.getDamage() * 0.25); // reduce fall damage
+        }
+
         if (p.getHealth() - event.getFinalDamage() < 1) {
             // TODO: may have to cancel event, but setting damage to zero hopefully keeps the sound effect
             event.setDamage(0);
             gamePlayer.die();
+        }
+
+    }
+
+    @EventHandler
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+
+        if (event.getEntityType() != EntityType.PLAYER) {
+            return;
+        }
+
+        Player p = (Player) event.getEntity();
+        GamePlayer gamePlayer = game.getGamePlayer(p);
+        if (gamePlayer == null) {
+            return;
+        }
+
+        Entity entityDamager = event.getDamager();
+        GamePlayer damager = null;
+        if (entityDamager instanceof Player) {
+            damager = game.getGamePlayer((Player) entityDamager);
+        } else if (entityDamager instanceof Projectile) {
+            ProjectileSource source = ((Projectile) entityDamager).getShooter();
+            if (source instanceof Player) {
+                damager = game.getGamePlayer((Player) source);
+            }
+
+        }
+
+        if (damager == null) {
+            return;
+        }
+
+        // cancel damage if it's coming from a teammate who is a different player
+        if (damager.getTeam() == gamePlayer.getTeam() && damager != gamePlayer) {
+            event.setCancelled(true);
+        } else {
+            if (entityDamager instanceof Firework) {
+                Location fireworkLocation = entityDamager.getLocation();
+                Location playerLocation = p.getLocation();
+                Vector vector = playerLocation.subtract(fireworkLocation).toVector();
+                double distance = vector.lengthSquared();
+                double power = distance != 0 ? Math.min(5, 75 / distance) : 5; // max power is 5
+                p.setVelocity(p.getVelocity().add(vector.multiply(power)));
+            }
         }
 
     }
@@ -137,7 +188,9 @@ public class GamePlayerListener implements Listener {
 
         EntityRegainHealthEvent.RegainReason reason = event.getRegainReason();
         if (reason == EntityRegainHealthEvent.RegainReason.SATIATED || reason == EntityRegainHealthEvent.RegainReason.REGEN) {
-            event.setCancelled(true);
+            event.setAmount(event.getAmount() * 0.25);
+            // TODO: enable this once health packs are implemented
+//            event.setCancelled(true);
         }
 
     }
@@ -154,9 +207,48 @@ public class GamePlayerListener implements Listener {
         Team team = gamePlayer.getTeam();
         // TODO: consider escaping characters in the name
         event.setFormat(event.getFormat()
-                .replaceFirst("<", (gamePlayer.isDead() ? i18n.getString("dead") + " " : "") + team.getColor().toString())
+                .replaceFirst("<", (gamePlayer.isDead() ? i18n.getString("dead") + " " : "") + team.getColor().getColor1())
                 .replaceFirst(">", ChatColor.RESET + ":")
         );
 
     }
+
+    @EventHandler
+    public void onPlayerDropItem(PlayerDropItemEvent event) {
+
+        Player player = event.getPlayer();
+        GamePlayer gamePlayer = game.getGamePlayer(player);
+        if (gamePlayer == null) {
+            return;
+        }
+
+        event.setCancelled(true);
+
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+
+        Player player = event.getPlayer();
+        game.getTeams().forEach(team -> team.getPlayers().forEach(p -> {
+            System.out.println(player + ", " + p.getPlayer() + ", " + (player.getUniqueId().equals(p.getPlayer().getUniqueId())));
+        }));
+
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        game.removePlayer(event.getPlayer());
+    }
+
+    @EventHandler
+    public void onClick(InventoryClickEvent event) {
+
+        Player player = (Player) event.getWhoClicked();
+        if (game.hasPlayer(player) && event.getSlotType() == InventoryType.SlotType.ARMOR) {
+            event.setCancelled(true);
+        }
+
+    }
+
 }

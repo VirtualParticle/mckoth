@@ -4,9 +4,12 @@ import com.virtualparticle.mc.mckoth.McKoth;
 import game.Game;
 import game.GamePlayer;
 import game.Team;
+import game.TeamColor;
 import game.timer.CaptureTimer;
+import org.bukkit.Material;
 import org.bukkit.scheduler.BukkitScheduler;
 import utils.MathUtils;
+import utils.WorldEditUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,6 +55,11 @@ public class ActiveCapturePoint {
     public void reset() {
         timer.reset();
         timer.clear();
+        WorldEditUtils.replace(capturePoint.getRegion(), ".*_WOOL", Material.GRAY_WOOL);
+    }
+
+    public void setColor(TeamColor color) {
+        WorldEditUtils.replace(capturePoint.getRegion(), ".*_WOOL", color.getMaterial());
     }
 
     public void setPaused(boolean paused) {
@@ -104,5 +112,9 @@ public class ActiveCapturePoint {
 
     public Team getControllingTeam() {
         return timer.getControllingTeam();
+    }
+
+    public Team getTeamWithCaptime() {
+        return timer.getTeamWithCaptime();
     }
 }

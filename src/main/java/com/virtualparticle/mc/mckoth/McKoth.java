@@ -9,6 +9,7 @@ import game.GameManager;
 import game.listeners.GamePlayerListener;
 import map.Map;
 import map.capturePoint.CapturePoint;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -63,11 +64,15 @@ public final class McKoth extends JavaPlugin {
 
         }
 
+        Bukkit.getScoreboardManager().getMainScoreboard().getTeams().forEach(org.bukkit.scoreboard.Team::unregister);
+
 
     }
 
     @Override
     public void onDisable() {
+
+        gameManager.getGames().forEach(game -> game.endGame(null));
 
         FileConfiguration maps = getConfigFile("maps.yml");
         for (Map map : Map.getMaps()) {
@@ -79,6 +84,8 @@ public final class McKoth extends JavaPlugin {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
 
     }
 

@@ -1,5 +1,6 @@
 package game.listeners;
 
+import I18n.I18n;
 import game.Game;
 import game.Team;
 import game.timer.CaptureTimer;
@@ -12,6 +13,7 @@ import org.bukkit.event.Listener;
 public class TimerListener implements Listener {
 
     private final Game game;
+    private final I18n i18n = I18n.getInstance();
 
     public TimerListener(Game game) {
         this.game = game;
@@ -31,9 +33,11 @@ public class TimerListener implements Listener {
                 return;
             }
 
-            // this means the game can only be won if the team controls all capture points
+            // this means the game can only be won no one else has captime and all points are owned, not great for more than one point
             if (game.getActiveCapturePoints().stream().noneMatch(point -> point.getControllingTeam() != team)) {
-                game.endRound(team);
+                if (game.getActiveCapturePoints().stream().noneMatch(point -> point.getTeamWithCaptime() != null)) {
+                    game.endRound(team);
+                }
             }
 
         }

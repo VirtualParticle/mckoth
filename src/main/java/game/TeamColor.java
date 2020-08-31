@@ -42,4 +42,8 @@ public enum TeamColor {
         return armorColor;
     }
 
+    @Override
+    public String toString() {
+        return color1.toString();
+    }
 }

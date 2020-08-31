@@ -7,10 +7,12 @@ import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.regions.CuboidRegion;
 import com.sk89q.worldedit.regions.Region;
-import com.sk89q.worldedit.world.World;
 import com.virtualparticle.mc.mckoth.McKoth;
 import com.virtualparticle.mc.mckoth.SerializableCuboidRegion;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
 public class WorldEditUtils {
@@ -34,6 +36,32 @@ public class WorldEditUtils {
         }
 
         return region;
+
+    }
+
+    public static void replace(Region region, Material a, Material b) {
+
+        region.forEach(vector -> {
+            World world = BukkitAdapter.asBukkitWorld(region.getWorld()).getWorld();
+            Location location = new Location(world, vector.getX(), vector.getY(), vector.getZ());
+            Block block = world.getBlockAt(location);
+            if (block.getType() == a) {
+                block.setType(b);
+            }
+        });
+
+    }
+
+    public static void replace(Region region, String pattern, Material b) {
+
+        region.forEach(vector -> {
+            World world = BukkitAdapter.asBukkitWorld(region.getWorld()).getWorld();
+            Location location = new Location(world, vector.getX(), vector.getY(), vector.getZ());
+            Block block = world.getBlockAt(location);
+            if (block.getType().toString().matches(pattern)) {
+                block.setType(b);
+            }
+        });
 
     }
 

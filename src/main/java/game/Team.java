@@ -38,7 +38,7 @@ public class Team {
                 this.toString().replaceFirst("^[^@]*@", ""));
         scoreboardTeam.setDisplayName(name);
         scoreboardTeam.setColor(color.getColor1());
-        scoreboardTeam.setAllowFriendlyFire(false);
+//        scoreboardTeam.setAllowFriendlyFire(false);
         scoreboardTeam.setCanSeeFriendlyInvisibles(true);
         scoreboardTeam.setOption(org.bukkit.scoreboard.Team.Option.NAME_TAG_VISIBILITY, org.bukkit.scoreboard.Team.OptionStatus.NEVER);
         this.timer = new TeamTimer(this, captime);
@@ -117,11 +117,13 @@ public class Team {
 
     public GamePlayer remove(Player player) {
         scoreboardTeam.removeEntry(player.getName());
-        return players.stream().filter(p -> p.getPlayer() == player).findFirst().orElse(null);
+        GamePlayer gamePlayer = game.getGamePlayer(player);
+        players.removeIf(p -> p.getPlayer().getUniqueId().equals(player.getUniqueId()));
+        return gamePlayer;
     }
 
     public boolean hasPlayer(Player player) {
-        return players.stream().anyMatch(gp -> gp.getPlayer() == player);
+        return players.stream().anyMatch(gp -> gp.getPlayer().getUniqueId().equals(player.getUniqueId()));
     }
 
     public TeamColor getColor() {
